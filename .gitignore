@@ -1,0 +1,11 @@
+**/dist
+**/build
+**/.rune
+**/.run
+
+.env
+.env.*
+!.env.local.example
+!.env.kanel.example
+
+node_modules/

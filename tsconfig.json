@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "rootDir": "./",
+    "target": "es2022",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "typeRoots": ["node_modules/@types", "packages/types"],
+    "noImplicitOverride": true,
+    "preserveSymlinks": true,
+    "noImplicitAny": false,
+    "verbatimModuleSyntax": true,
+    "experimentalDecorators": true,
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": true
+  }
+}

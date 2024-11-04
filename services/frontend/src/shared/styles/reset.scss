@@ -1,0 +1,72 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  appearance: none;
+}
+
+
+a {
+  color: inherit;
+  line-height: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+input,
+textarea {
+  padding: 0;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  appearance: none;
+}
+
+input[type='text']:focus,
+input[type='password']:focus,
+input[type='email']:focus,
+input[type='tel']:focus,
+input[type='url']:focus,
+input[type='number']:focus,
+button:focus,
+textarea:focus {
+  border-color: unset;
+  outline: none;
+}
+
+b {
+  font-weight: $font-weight-bold;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 1000s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px inset transparent;
+  -webkit-text-fill-color: $black;
+}
