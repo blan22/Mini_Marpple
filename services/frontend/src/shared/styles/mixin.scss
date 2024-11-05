@@ -1,0 +1,10 @@
+@use 'sass:map';
+
+@mixin flex($jc, $ai, $di: row) {
+  display: flex;
+  align-items: $ai;
+  justify-content: $jc;
+  @if $di != row {
+    flex-direction: $di;
+  }
+}
