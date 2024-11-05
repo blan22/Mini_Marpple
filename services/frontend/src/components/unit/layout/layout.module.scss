@@ -1,0 +1,37 @@
+$breakpoint-mobile-max: 550px;
+$breakpoint-pc-min: 1000px;
+$breakpoint-pc-max: 1440px;
+
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile-max}) {
+    @content;
+  }
+}
+
+@mixin pc {
+  @media (min-width: #{$breakpoint-pc-min}) and (max-width: #{$breakpoint-pc-max}) {
+    @content;
+  }
+}
+
+html {
+  @include mobile {
+    font-size: $font-size-mo-px;
+  }
+
+  @include pc {
+    font-size: $font-size-pc-px;
+  }
+}
+
+.layout {
+  margin: 0 auto;
+
+  @include mobile {
+    width: 350px;
+  }
+
+  @include pc {
+    width: 1000px;
+  }
+}
