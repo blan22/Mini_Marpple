@@ -1,4 +1,4 @@
-// const path = require('path');
+const path = require('path');
 
 /**
  * @type {import('@rune-ts/server').RuneConfigType}
@@ -13,10 +13,9 @@ module.exports = {
   dynamicChunk: true,
   serverDynamicChunk: true,
   processReload: true,
-  // sassOptions: {
-  //   includePaths: [path.join(path.resolve(), '../common/style')],
-  //   additionalData: `@import "base";`,
-  // },
+  sassOptions: {
+    includePaths: [path.join(path.resolve(), './src/shared/styles')],
+    additionalData: `@import "global";`,
+  },
   showBundleAnalyzer: false,
-  // internalModules: [/@packages\/*\w+/, /@marpple\/rune-ui/],
 };
