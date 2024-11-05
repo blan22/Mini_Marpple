@@ -2,9 +2,9 @@
 @use 'sass:math';
 
 @function ptr($target-size) {
-  @return math.div($target-size, $font-size-pc) * 1rem; // rem 단위로 변환
+  @return math.div($target-size, $font-size-pc) * 1rem;
 }
 
 @function mptr($target-size) {
-  @return math.div($target-size, $font-size-mo) * 1rem; // rem 단위로 변환
+  @return math.div($target-size, $font-size-mo) * 1rem;
 }

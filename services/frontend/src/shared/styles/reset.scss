@@ -59,7 +59,7 @@ textarea:focus {
 }
 
 b {
-  font-weight: $font-weight-bold;
+  font-weight: 700;
 }
 
 input:-webkit-autofill,
@@ -68,5 +68,5 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition: background-color 1000s ease-in-out 0s;
   box-shadow: 0 0 0 1000px inset transparent;
-  -webkit-text-fill-color: $black;
+  -webkit-text-fill-color: #000000;
 }
