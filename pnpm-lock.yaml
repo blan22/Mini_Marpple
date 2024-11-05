@@ -151,6 +151,9 @@ importers:
 
   services/frontend:
     dependencies:
+      '@fxts/core':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@rune-ts/server':
         specifier: ^1.0.23
         version: 1.0.23(rune-ts@0.8.12)
