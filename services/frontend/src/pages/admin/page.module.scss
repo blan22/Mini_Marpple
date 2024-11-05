@@ -1,0 +1,14 @@
+.container {
+  @include flex(space-between, flex-start);
+  gap: 2rem;
+}
+
+.left {
+  width: 560px;
+}
+
+.right {
+  flex: 1;
+  @include flex(space-between, center, column);
+  gap: 10px;
+}

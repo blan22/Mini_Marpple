@@ -2,7 +2,7 @@ import { html, Page } from 'rune-ts';
 import klass from './page.module.scss';
 import { Button, Image, Select, Layout, Header } from '../../components';
 
-export class HomePage extends Page<{}> {
+export class ProductsPage extends Page<{}> {
   override template(_) {
     return html`${new Layout(
       {
