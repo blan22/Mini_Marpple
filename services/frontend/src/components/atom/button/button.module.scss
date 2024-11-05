@@ -1,0 +1,16 @@
+.button {
+  padding: 0 ptr(16);
+  align-self: stretch;
+  width: 100%;
+  height: ptr(56);
+  border-radius: ptr(8);
+}
+
+.primary {
+  background-color: $primary;
+  color: $white;
+}
+
+.disabled {
+  cursor: not-allowed;
+}

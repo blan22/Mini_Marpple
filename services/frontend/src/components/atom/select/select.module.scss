@@ -1,0 +1,12 @@
+.select {
+  padding: 0.65rem ptr(16);
+  width: 100%;
+  height: ptr(56);
+  color: $gray_50;
+  border-radius: ptr(8);
+  border: 1px solid $gray_20;
+  box-sizing: border-box;
+  &:focus {
+      outline: none;
+  }
+}
