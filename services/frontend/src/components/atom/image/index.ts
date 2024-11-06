@@ -36,7 +36,7 @@ class Image extends View<ImageData> {
       loading="${this.options.lazy ? 'lazy' : ''}"
       width="${this.options.width}"
       height="${this.options.height}"
-      fetchpriority="${this.options.priority}"
+      fetchpriority="${this.options.priority ? this.options.priority : 'auto'}"
       class="${klasses(klass.image, this.options.fill ? klass.fill : '')}"
     />`;
   }
