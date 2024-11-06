@@ -1,12 +1,30 @@
 import { html, View } from 'rune-ts';
 import klass from './select.module.scss';
 
-class Select extends View<{}> {
-  override template(_) {
+interface SelectOption {
+  name: string;
+  value: string;
+}
+
+interface SelectData {
+  options: SelectOption[];
+}
+
+interface SelectOptions {
+  name?: string;
+}
+
+class Select extends View<SelectData> {
+  constructor(
+    data: SelectData,
+    public options: SelectOptions = {},
+  ) {
+    super({ ...data });
+  }
+  override template() {
     return html`
-      <select name="셀렉트" class="${klass.select}">
-        <option value="옷">옷</option>
-        <option value="축구공">축구공</option>
+      <select name="${this.options.name}" class="${klass.select}">
+        ${this.data.options.map((option) => html`<option value="${option.value}">${option.name}</option>`)}
       </select>
     `;
   }
