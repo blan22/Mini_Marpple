@@ -12,10 +12,10 @@ class Thumbnail extends View<ThumbnailData> {
   override template() {
     return html`
       <div class="${klass.thumbnail}">
-        ${this.data.thumbnail
+        ${this._url
           ? html`${new Image(
               {
-                src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Ward_Cunningham_-_Commons-1.jpg/1920px-Ward_Cunningham_-_Commons-1.jpg',
+                src: this._url,
               },
               {
                 width: '100%',
@@ -33,7 +33,6 @@ class Thumbnail extends View<ThumbnailData> {
   }
 
   setThumbnail(data: File | null) {
-    console.log(data);
     if (this._url) {
       URL.revokeObjectURL(this._url);
     }
