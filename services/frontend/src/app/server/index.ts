@@ -80,7 +80,16 @@ server.get(ClientRouter['/admin/create'].toString(), function (req, res) {
   res.locals.layoutData = layoutData;
   res.send(
     new MetaView(
-      ClientRouter['/admin/create']({ name: '', price: 100 }, { test: true }),
+      ClientRouter['/admin/create'](
+        {
+          name: null,
+          thumbnail: null,
+          category: null,
+          price: null,
+          stock: null,
+        },
+        { test: true },
+      ),
       res.locals.layoutData,
     ).toHtml(),
   );
