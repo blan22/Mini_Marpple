@@ -5,10 +5,29 @@
 
 .left {
   width: 560px;
+  height: 560px;
 }
 
 .right {
   flex: 1;
   @include flex(space-between, center, column);
-  gap: 10px;
+  gap: 2rem;
+}
+
+.name {
+  width: 100%;
+  border-bottom: 1px solid $gray_20;
+  padding-bottom: 0.25rem;
+  font-family: $font-family-kr;
+  font-weight: 500;
+  &::placeholder {
+    color: $gray_50;
+    font-family: $font-family-kr;
+    font-weight: 500;
+  }
+}
+
+.stock {
+  width: 100%;
+  @include flex(center, center);
 }
