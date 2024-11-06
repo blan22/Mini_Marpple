@@ -1,3 +1,11 @@
+.typography {
+  width: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
 .size_36 {
   @include base(36, calc(50 / 36));
 }

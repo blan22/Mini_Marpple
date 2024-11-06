@@ -43,6 +43,7 @@ interface TypographyOptions {
   size?: keyof typeof FONT_SIZE;
   weight?: keyof typeof FONT_WEIGHT;
   color?: keyof typeof FONT_COLOR;
+  center?: boolean;
 }
 
 class Typography extends View<TypographyData> {
@@ -53,13 +54,14 @@ class Typography extends View<TypographyData> {
       color: 'BLACK',
       weight: 'MEDIUM',
       size: 'SIZE_16',
+      center: false,
     },
   ) {
     super({ ...data });
   }
 
   override template() {
-    return html`<${this.options.as} class="${klasses(FONT_SIZE[this.options.size], FONT_COLOR[this.options.color], FONT_WEIGHT[this.options.weight])}">${this.data.text}</${this.options.as}>`;
+    return html`<${this.options.as} class="${klasses(klass.typography, FONT_SIZE[this.options.size], FONT_COLOR[this.options.color], FONT_WEIGHT[this.options.weight], this.options.center ? klass.center : '')}">${this.data.text}</${this.options.as}>`;
   }
 }
 
