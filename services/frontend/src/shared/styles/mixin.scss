@@ -8,3 +8,11 @@
     flex-direction: $di;
   }
 }
+
+@mixin base($size, $line) {
+  font-family: $font_family_kr;
+  font-size: ptr($size);
+  font-style: normal;
+  letter-spacing: $font_letter_spacing_base;
+  line-height: $line;
+}
