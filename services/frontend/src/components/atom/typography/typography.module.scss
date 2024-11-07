@@ -1,0 +1,86 @@
+.typography {
+  width: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+.size_36 {
+  @include base(36, calc(50 / 36));
+}
+
+.size_24 {
+  @include base(24, calc(34 / 24));
+}
+
+.size_20 {
+  @include base(20, calc(28 / 20));
+}
+
+.size_16 {
+  @include base(16, 1.5);
+}
+
+.size_14 {
+  @include base(14, calc(22 / 14));
+}
+
+.size_12 {
+  @include base(14, calc(17 / 12));
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.medium {
+  font-weight: 500;
+}
+
+.regular {
+  font-weight: 400;
+}
+
+.black {
+  color: $black;
+}
+.white {
+  color: $white;
+}
+.primary {
+  color: $primary;
+}
+.secondary {
+  color: $secondary;
+}
+.success {
+  color: $success;
+}
+.error {
+  color: $error;
+}
+.accent {
+  color: $accent;
+}
+.gray_50 {
+  color: $gray_50;
+}
+.gray_20 {
+  color: $gray_20;
+}
+.gray_10 {
+  color: $gray_10;
+}
+.dim_5 {
+  color: $dim_5;
+}
+.dim_10 {
+  color: $dim_10;
+}
+.dim_30 {
+  color: $dim_30;
+}
+.dim_60 {
+  color: $dim_60;
+}

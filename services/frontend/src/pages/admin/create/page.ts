@@ -14,7 +14,7 @@ export class AdminProductCreatePage extends Page<{}> {
               })}
             </div>
             <div class="${klass.right}">
-              ${new ImageUploader({})} ${new Select({})}
+              ${new ImageUploader({})} ${new Select({ options: [{ name: 'asd', value: 'asd' }] })}
               ${new Button({ text: '버튼' }, { variant: 'primary', disabled: true })}
             </div>
           </div>

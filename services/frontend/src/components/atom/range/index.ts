@@ -1,9 +1,17 @@
 import { html, View } from 'rune-ts';
 import klass from './range.module.scss';
 
-class Range extends View<{}> {
+interface RangeData {}
+
+class Range extends View<RangeData> {
   override template(_) {
-    return html`<input />`;
+    return html`
+      <div class="${klass.range}">
+        <button onclick="range.stepDown()">-</button>
+        <input type="number" id="range" value="0" />
+        <button onclick="range.stepUp()">+</button>
+      </div>
+    `;
   }
 }
 
