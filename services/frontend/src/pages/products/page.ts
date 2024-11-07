@@ -14,7 +14,13 @@ export class ProductsPage extends Page<{}> {
               })}
             </div>
             <div class="${klass.right}">
-              ${new Select({})} ${new Button({ text: '버튼' }, { variant: 'primary', disabled: true })}
+              ${new Select({
+                options: [
+                  { name: '옷', value: 'cloth' },
+                  { name: '공', value: 'ball' },
+                ],
+              })}
+              ${new Button({ text: '버튼' }, { variant: 'primary', disabled: true })}
             </div>
           </div>
         `,
