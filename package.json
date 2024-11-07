@@ -7,6 +7,7 @@
     "frontend": "pnpm -F @monorepo/frontend dev",
     "backend": "pnpm -F @monorepo/backend dev",
     "build:backend": "pnpm -F @monorepo/backend build",
+    "build:frontend": "pnpm -F @monorepo/frontend build",
     "migrate": "pnpm -F @monorepo/backend migrate"
   },
   "keywords": [],

@@ -7,7 +7,7 @@ module.exports = {
   name: 'mpa_rune_boilerplate',
   port: 3002,
   mode: 'render',
-  clientEntry: './src/app/client/app.ts',
+  clientEntry: './src/app/client/index.ts',
   serverEntry: './src/app/server/index.ts',
   dynamicChunk: true,
   serverDynamicChunk: true,

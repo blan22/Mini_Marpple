@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@monorepo/shared": "workspace:*",
     "@fxts/core": "^1.2.0",
     "@rune-ts/server": "^1.0.23",
     "@swc/core": "^1.7.42",
