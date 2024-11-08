@@ -5,9 +5,9 @@ const ACCEPTED_FILE_TYPES = ['image/png'];
 
 const ProductSchema = z.object({
   id: z.number(),
-  name: z.string().max(50).min(1),
-  stock: z.number(),
-  price: z.number(),
+  name: z.string().max(50).min(2),
+  stock: z.number().min(1).max(1000),
+  price: z.number().min(1000).max(100000000),
   category: z.enum(['cloth', 'goods', 'book', 'food']),
   thumbnail: z
     .instanceof(File)
