@@ -3,13 +3,36 @@ import klass from './range.module.scss';
 
 interface RangeData {}
 
+interface RangeOptions {
+  require?: boolean;
+  min?: number;
+  max?: number;
+  pattern?: string;
+  name: string;
+}
+
 class Range extends View<RangeData> {
-  override template(_) {
+  constructor(
+    data: RangeData,
+    public options: RangeOptions,
+  ) {
+    super({ ...data });
+  }
+  override template() {
     return html`
       <div class="${klass.range}">
-        <button onclick="range.stepDown()">-</button>
-        <input type="number" id="range" value="0" />
-        <button onclick="range.stepUp()">+</button>
+        <button type="button" onclick="${this.options.name}.stepDown()">-</button>
+        <input
+          type="number"
+          pattern="^\\d+$"
+          id="${this.options.name}"
+          value="${this.options.min ?? 0}"
+          min="${this.options.min ?? 0}"
+          max="${this.options.max ?? 0}"
+          name="${this.options.name ? this.options.name : ''}"
+          ${this.options.require ? 'require' : ''}
+        />
+        <button type="button" onclick="${this.options.name}.stepUp()">+</button>
       </div>
     `;
   }

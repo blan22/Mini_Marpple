@@ -1,0 +1,5 @@
+.product_card {}
+
+.product_content {
+  @include flex(center, center, column);
+}

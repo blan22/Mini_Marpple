@@ -21,6 +21,7 @@ class Select extends View<SelectData> {
   ) {
     super({ ...data });
   }
+
   override template() {
     return html`
       <select name="${this.options.name}" class="${klass.select}">

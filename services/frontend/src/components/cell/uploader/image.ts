@@ -5,8 +5,19 @@ import { Button, Typography } from '../../atom';
 
 export class ChangeImageUploaderFileEvent extends CustomEventWithDetail<File | null> {}
 
+interface ImageUploaderOptions {
+  name?: string;
+}
+
 class ImageUploader extends View<{}> {
   private _thumbnail: File | null = null;
+
+  constructor(
+    data: {},
+    public options: ImageUploaderOptions = {},
+  ) {
+    super({ ...data });
+  }
 
   override template() {
     return html`
@@ -25,7 +36,7 @@ class ImageUploader extends View<{}> {
             <span>+</span>
           </label>
           ${new Button({ text: '삭제' })}
-          <input id="thumbnail" type="file" accept="image/*" />
+          <input name="${this.options.name ? this.options.name : ''}" id="thumbnail" type="file" accept="image/*" />
         </div>
       </div>
     `;

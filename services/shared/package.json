@@ -1,9 +1,12 @@
 {
   "name": "@monorepo/shared",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && vite build"
   },
   "keywords": [],
   "author": "",
@@ -11,5 +14,10 @@
   "description": "",
   "dependencies": {
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "vite": "^5.4.10",
+    "vite-plugin-dts": "^4.3.0"
   }
 }

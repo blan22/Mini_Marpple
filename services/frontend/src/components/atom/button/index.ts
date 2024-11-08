@@ -9,6 +9,7 @@ interface ButtonData {
 interface ButtonOptions {
   variant: 'primary' | 'line';
   disabled?: boolean;
+  type?: 'reset' | 'submit' | 'button';
 }
 
 class Button extends View<ButtonData> {
@@ -17,6 +18,7 @@ class Button extends View<ButtonData> {
     public options: ButtonOptions = {
       variant: 'primary',
       disabled: false,
+      type: 'button',
     },
   ) {
     super({ ...data });
@@ -26,6 +28,7 @@ class Button extends View<ButtonData> {
     return html`
       <button
         class="${klass.button} ${klasses(klass[this.options.variant], this.options.disabled ? klass.disabled : '')}"
+        type="${this.options.type ? this.options.type : 'button'}"
         ${this.options.disabled ? 'disabled' : ''}
       >
         ${text}
