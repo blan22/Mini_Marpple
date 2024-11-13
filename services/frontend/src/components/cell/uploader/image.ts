@@ -5,29 +5,34 @@ import { Button, Typography } from '../../atom';
 
 export class ChangeImageUploaderFileEvent extends CustomEventWithDetail<File | null> {}
 
-interface ImageUploaderOptions {
-  name?: string;
+interface ImageUploaderData {
+  thumbnail?: File | null;
 }
 
-class ImageUploader extends View<{}> {
-  private _thumbnail: File | null = null;
+interface ImageUploaderOptions {
+  name?: string;
+  defaultValue?: string | null;
+}
 
+class ImageUploader extends View<ImageUploaderData> {
   constructor(
-    data: {},
+    data: ImageUploaderData,
     public options: ImageUploaderOptions = {},
   ) {
     super({ ...data });
+
+    console.log(this.data);
   }
 
   override template() {
     return html`
       <div class="${klass.uploader}">
         <div class="${klass.name}">
-          ${this._thumbnail
-            ? html`${new Typography({ text: this._thumbnail.name })}`
+          ${this.data.thumbnail
+            ? html`${new Typography({ text: this.data.thumbnail.name })}`
             : html`${new Typography(
-                { text: '썸네일을 첨부해주세요.' },
-                { as: 'span', color: 'GRAY_50', weight: 'MEDIUM', size: 'SIZE_16' },
+                { text: this.options.defaultValue ?? '썸네일을 첨부해주세요.' },
+                { as: 'span', color: 'GRAY_50', weight: 'MEDIUM', size: 'SIZE_16', full: true },
               )}`}
         </div>
         <div>
@@ -36,35 +41,41 @@ class ImageUploader extends View<{}> {
             <span>+</span>
           </label>
           ${new Button({ text: '삭제' })}
-          <input name="${this.options.name ? this.options.name : ''}" id="thumbnail" type="file" accept="image/*" />
+          <input
+            name="${this.options.name ? this.options.name : 'thumbnail'}"
+            id="thumbnail"
+            type="file"
+            accept="image/*"
+          />
         </div>
       </div>
     `;
   }
 
-  @on('change')
+  @on('change', 'input')
   onChange(e) {
     if (e.target.id === 'thumbnail') {
-      this._thumbnail = pipe(
+      this.data.thumbnail = pipe(
         toArray(e.target.files),
         take(1),
         reduce((value: File) => value),
       );
 
-      this.dispatchEvent(ChangeImageUploaderFileEvent, { detail: this._thumbnail, bubbles: true });
+      this.dispatchEvent(ChangeImageUploaderFileEvent, { detail: this.data.thumbnail, bubbles: true });
       this.redraw();
     }
   }
 
   @on('click')
   _reset(e) {
-    if (!this._thumbnail) return;
+    if (!this.data.thumbnail) return;
     const button = this.subView(Button);
 
     if (e.target === button?.element()) {
-      this._thumbnail = null;
+      this.data.thumbnail = null;
+      this.options.defaultValue = null;
 
-      this.dispatchEvent(ChangeImageUploaderFileEvent, { detail: this._thumbnail, bubbles: true });
+      this.dispatchEvent(ChangeImageUploaderFileEvent, { detail: this.data.thumbnail, bubbles: true });
       this.redraw();
     }
   }

@@ -3,7 +3,7 @@
   padding: 2rem 0;
 }
 
-.left {
+.header_left {
   @include flex(space-between, center);
   gap: 2rem;
 
@@ -17,7 +17,7 @@
   }
 }
 
-.right {
+.header_right {
   @include flex(space-between, center);
 
   ul {

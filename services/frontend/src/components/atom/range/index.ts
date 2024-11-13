@@ -9,6 +9,7 @@ interface RangeOptions {
   max?: number;
   pattern?: string;
   name: string;
+  defaultValue?: number | null;
 }
 
 class Range extends View<RangeData> {
@@ -26,7 +27,7 @@ class Range extends View<RangeData> {
           type="number"
           pattern="^\\d+$"
           id="${this.options.name}"
-          value="${this.options.min ?? 0}"
+          value="${this.options.defaultValue ?? 0}"
           min="${this.options.min ?? 0}"
           max="${this.options.max ?? 0}"
           name="${this.options.name ? this.options.name : ''}"

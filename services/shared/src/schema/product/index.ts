@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 5;
-const MIN_UPLOAD_SIZE = 1;
-const ACCEPTED_FILE_TYPES = ['image/png'];
+const MAX_IMAGE_UPLOAD_SIZE = 1024 * 1024 * 5;
+const MIN_IMAGE_UPLOAD_SIZE = 1;
+const ACCEPTED_IMAGE_TYPES = ['image/png', 'image/jpeg'];
 
 const ProductSchema = z.object({
   id: z.number(),
@@ -28,13 +28,13 @@ const ProductSchema = z.object({
   thumbnail: z
     .instanceof(File, { message: '썸네일을 첨부해주세요.' })
     .refine((file) => {
-      return !file || file.size >= MIN_UPLOAD_SIZE || file.size <= MAX_UPLOAD_SIZE;
+      return file && file.size <= MAX_IMAGE_UPLOAD_SIZE && file.size >= MIN_IMAGE_UPLOAD_SIZE;
     }, '이미지 크기가 5mb를 초과했습니다.')
     .refine((file) => {
-      return ACCEPTED_FILE_TYPES.includes(file.type);
+      return ACCEPTED_IMAGE_TYPES.includes(file.type);
     }, '이미지는 png 포맷만 가능합니다.'),
-  createAt: z.date(),
-  updateAt: z.date(),
+  create_at: z.date(),
+  update_at: z.date(),
 });
 
 const CreateProductSchema = ProductSchema.pick({
@@ -45,9 +45,32 @@ const CreateProductSchema = ProductSchema.pick({
   thumbnail: true,
 });
 
+const UpdateProductSchema = CreateProductSchema.omit({ thumbnail: true })
+  .partial()
+  .extend({
+    thumbnail: z
+      .instanceof(File, { message: '썸네일을 첨부해주세요.' })
+      .refine((file) => {
+        return file && file.size <= MAX_IMAGE_UPLOAD_SIZE && file.size >= MIN_IMAGE_UPLOAD_SIZE;
+      }, '이미지 크기가 5mb를 초과했습니다.')
+      .refine((file) => {
+        return ACCEPTED_IMAGE_TYPES.includes(file.type);
+      }, '이미지는 png 포맷만 가능합니다.')
+      .or(z.string().refine((string) => string !== 'null' && string !== 'undefined', '썸네일을 첨부해주세요.')),
+  });
+
 type Product = z.infer<typeof ProductSchema>;
 
 type CreateProduct = z.infer<typeof CreateProductSchema>;
 
-export { ProductSchema, CreateProductSchema };
-export type { Product, CreateProduct };
+type UpdateProduct = z.infer<typeof UpdateProductSchema>;
+
+export {
+  ProductSchema,
+  CreateProductSchema,
+  UpdateProductSchema,
+  MAX_IMAGE_UPLOAD_SIZE,
+  MIN_IMAGE_UPLOAD_SIZE,
+  ACCEPTED_IMAGE_TYPES,
+};
+export type { Product, CreateProduct, UpdateProduct };

@@ -5,7 +5,7 @@ class Header extends View<{}> {
   override template() {
     return html`
       <div class="${klass.header}">
-        <div class="${klass.left}">
+        <div class="${klass.header_left}">
           <a href="/"><h2>Onboarding</h2></a>
           <nav>
             <ul>
@@ -14,7 +14,7 @@ class Header extends View<{}> {
             </ul>
           </nav>
         </div>
-        <div class="${klass.right}">
+        <div class="${klass.header_right}">
           <ul>
             <li>
               <a href="/@/cart">

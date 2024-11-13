@@ -1,7 +1,7 @@
 import { html, Page } from 'rune-ts';
 import type { Product } from '@monorepo/shared';
 import klass from './page.module.scss';
-import { Layout, Header, Typography } from '../../components';
+import { Layout, Header } from '../../components';
 import { ProductCardList } from './product_card_list';
 
 interface AdminPageData {

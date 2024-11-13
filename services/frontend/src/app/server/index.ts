@@ -1,8 +1,10 @@
 import { MetaView, app, type LayoutData } from '@rune-ts/server';
-import type { Product } from '@monorepo/shared';
+import shared, { type Product } from '@monorepo/shared';
 import favicon from '../../../public/favicon.png';
-
 import { ClientRouter } from '../router';
+import { getProductById, getProductsByQuery } from '../../lib/api';
+import { convertURLtoFile } from '../../lib/utils';
+import { pipe, reduce } from '@fxts/core';
 
 const server = app();
 
@@ -44,7 +46,7 @@ server.get(ClientRouter['/products'].toString(), function (req, res) {
   );
 });
 
-server.get(ClientRouter['/admin'].toString(), function (req, res) {
+server.get(ClientRouter['/admin'].toString(), async function (req, res) {
   const layoutData: LayoutData = {
     head: {
       title: 'ADMIN',
@@ -58,6 +60,7 @@ server.get(ClientRouter['/admin'].toString(), function (req, res) {
       ],
     },
   };
+  const result = await getProductsByQuery();
   const products: (Omit<Product, 'thumbnail'> & { href: string })[] = Array.from({ length: 16 }, (_, index) => ({
     id: index,
     name: `product${index + 1}`,
@@ -96,7 +99,7 @@ server.get(ClientRouter['/admin/create'].toString(), function (req, res) {
   );
 });
 
-server.get(ClientRouter['/admin/:id'].toString(), function (req, res) {
+server.get(ClientRouter['/admin/:id'].toString(), async function (req, res) {
   const layoutData: LayoutData = {
     head: {
       title: 'ADMIN PRODUCT UPDATE',
@@ -111,10 +114,14 @@ server.get(ClientRouter['/admin/:id'].toString(), function (req, res) {
     },
   };
   res.locals.layoutData = layoutData;
-  const product = {};
+
+  const result = await getProductById(parseInt(req.params.id!));
+  const product = shared.takeOne(result.data);
+  const thumbnail = await convertURLtoFile(product.thumbnail);
+
   res.send(
     new MetaView(
-      ClientRouter['/admin/:id']({ name: null, thumbnail: null, category: null, price: null, stock: null }),
+      ClientRouter['/admin/:id']({ ...product, thumbnail_url: product.thumbnail, thumbnail }),
       res.locals.layoutData,
     ).toHtml(),
   );

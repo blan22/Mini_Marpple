@@ -3,10 +3,24 @@ import { Image, Typography } from '../../atom';
 import klass from './card.module.scss';
 import type { Product } from '@monorepo/shared';
 
-class ProductCard extends View<Omit<Product, 'thumbnail'> & { href: string }> {
+interface ProductCardData extends Omit<Product, 'thumbnail'> {
+  href: string;
+}
+
+interface ProductCardOptions {
+  tagName?: string;
+}
+
+class ProductCard extends View<ProductCardData> {
+  constructor(
+    data: ProductCardData,
+    public options: ProductCardOptions = { tagName: 'li' },
+  ) {
+    super({ ...data });
+  }
   override template() {
     return html`
-      <li class="${klass.product_card}">
+      <${this.options.tagName} class="${klass.product_card}">
         <a href="${this.data.href}">
           ${new Image({
             src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Ward_Cunningham_-_Commons-1.jpg/1920px-Ward_Cunningham_-_Commons-1.jpg',
@@ -38,7 +52,7 @@ class ProductCard extends View<Omit<Product, 'thumbnail'> & { href: string }> {
             )}
           </div>
         </a>
-      </li>
+      </${this.options.tagName}>
     `;
   }
 }

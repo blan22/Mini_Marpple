@@ -12,6 +12,7 @@ interface SelectData {
 
 interface SelectOptions {
   name?: string;
+  defaultValue?: string | null;
 }
 
 class Select extends View<SelectData> {
@@ -25,7 +26,12 @@ class Select extends View<SelectData> {
   override template() {
     return html`
       <select name="${this.options.name}" class="${klass.select}">
-        ${this.data.options.map((option) => html`<option value="${option.value}">${option.name}</option>`)}
+        ${this.data.options.map(
+          (option) =>
+            html`<option ${this.options.defaultValue === option.value ? 'selected' : ''} value="${option.value}">
+              ${option.name}
+            </option>`,
+        )}
       </select>
     `;
   }

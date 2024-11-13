@@ -1,14 +1,19 @@
 .container {
-  @include flex(space-between, flex-start);
+  @include flex(space-between, flex-start, column);
   gap: 2rem;
+
+  section {
+    width: 100%;
+    background-color: $gray_10;
+    padding: ptr(16);
+    border-radius: ptr(5);
+    @include flex(start, center);
+    gap: 1rem;
+  }
 }
 
-.left {
-  width: 560px;
-}
-
-.right {
-  flex: 1;
-  @include flex(space-between, center, column);
-  gap: 10px;
+.order_list {
+  width: 100%;
+  @include flex(center, center, column);
+  gap: 1.25rem;
 }

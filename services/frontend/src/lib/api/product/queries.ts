@@ -1,11 +1,16 @@
-import { delay } from '@fxts/core';
+import { get } from '../../fetcher';
 
-const mockProducts = () => {
-  return Array.from({ length: 10 }).map((_, i) => ({
-    name: `product ${i + 1}`,
-  }));
+const getProductsByQuery = () => {
+  return get('http://localhost:4000/product', {
+    query: {
+      page: 1,
+      limit: 10,
+    },
+  });
 };
 
-export const getProducts = () => {
-  return delay(700, mockProducts());
+const getProductById = (id: number) => {
+  return get('http://localhost:4000/product', { params: id });
 };
+
+export { getProductsByQuery, getProductById };

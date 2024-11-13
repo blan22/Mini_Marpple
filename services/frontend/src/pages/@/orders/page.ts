@@ -1,6 +1,7 @@
 import { html, Page } from 'rune-ts';
 import klass from './page.module.scss';
-import { Button, Image, Select, Layout, Header } from '../../../components';
+import { Button, Image, Select, Layout, Header, Typography } from '../../../components';
+import { OrderCard } from '../../../components/cell/card';
 
 export class OrdersPage extends Page<{}> {
   override template(_) {
@@ -8,20 +9,32 @@ export class OrdersPage extends Page<{}> {
       {
         content: html`
           <div class="${klass.container}">
-            <div class="${klass.left}">
-              ${new Image({
-                src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Ward_Cunningham_-_Commons-1.jpg/1920px-Ward_Cunningham_-_Commons-1.jpg',
+            <section>
+              ${new Typography({ text: '전체' }, { size: 'SIZE_16', color: 'BLACK', weight: 'BOLD' })}
+              ${new Typography({ text: '취소완료' }, { size: 'SIZE_16', color: 'BLACK', weight: 'BOLD' })}
+            </section>
+            <ul class="${klass.order_list}">
+              ${new OrderCard({
+                id: 1,
+                name: `product`,
+                price: 100,
+                stock: 10,
+                category: 'goods',
+                createAt: new Date(),
+                updateAt: new Date(),
+                href: `/admin/1`,
               })}
-            </div>
-            <div class="${klass.right}">
-              ${new Select({
-                options: [
-                  { name: '옷', value: 'cloth' },
-                  { name: '공', value: 'ball' },
-                ],
+              ${new OrderCard({
+                id: 1,
+                name: `product`,
+                price: 100,
+                stock: 10,
+                category: 'goods',
+                createAt: new Date(),
+                updateAt: new Date(),
+                href: `/admin/1`,
               })}
-              ${new Button({ text: '버튼' }, { variant: 'primary', disabled: true })}
-            </div>
+            </ul>
           </div>
         `,
       },

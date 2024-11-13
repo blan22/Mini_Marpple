@@ -1,5 +1,56 @@
 .product_card {}
 
 .product_content {
-  @include flex(center, center, column);
+  @include flex(center, start, column);
+}
+
+.cart_card {
+  @include flex(center, start, column);
+  gap: 0.75rem;
+}
+
+.cart_card_wrapper {
+  width: 100%;
+  @include flex(space-between, center);
+}
+
+.cart_card_content {
+  width: 100px;
+}
+
+.cart_card_action {
+  @include flex(space-between, center, column);
+  height: 100%;
+  div {
+    width: 100%;
+    @include flex(end, center);
+  }
+  span {
+    cursor: pointer;
+  }
+}
+
+.cart_card_detail {
+  width: 100%;
+  @include flex(space-between, center);
+  padding: ptr(15);
+  background-color: $gray_10;
+  border-radius: ptr(5);
+}
+
+.order_card {
+  width: 100%;
+  @include flex(center, start, column);
+  gap: 0.5rem;
+}
+
+.order_card_content {
+  width: 100%;
+  @include flex(space-between, center);
+  div[data-rune="ProductCard"] {
+    width: 100px;
+  }
+  button {
+    width: 200px;
+  }
 }
