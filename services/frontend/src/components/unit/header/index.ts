@@ -9,7 +9,7 @@ class Header extends View<{}> {
           <a href="/"><h2>Onboarding</h2></a>
           <nav>
             <ul>
-              <li><a href="/products">상품</a></li>
+              <li><a href="/product">상품</a></li>
               <li><a href="/admin">어드민</a></li>
             </ul>
           </nav>

@@ -11,6 +11,7 @@ const app = express();
 
 // middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 app.use(express.static(path.join(path.resolve(), 'public')));
 app.use(
@@ -21,7 +22,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: false,
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 1000 * 60 * 60 * 24,
     },
   }),

@@ -57,6 +57,7 @@ const UpdateProductSchema = CreateProductSchema.omit({ thumbnail: true })
         return ACCEPTED_IMAGE_TYPES.includes(file.type);
       }, '이미지는 png 포맷만 가능합니다.')
       .or(z.string().refine((string) => string !== 'null' && string !== 'undefined', '썸네일을 첨부해주세요.')),
+    thumbnail_url: z.string().optional(),
   });
 
 type Product = z.infer<typeof ProductSchema>;

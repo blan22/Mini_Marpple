@@ -12,6 +12,7 @@
   @include flex(center, center);
 
   input {
+    background-color: initial;
     width: ptr(30);
     text-align: center;
   }

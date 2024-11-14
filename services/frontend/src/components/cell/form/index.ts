@@ -9,6 +9,8 @@ abstract class Form<T extends object = {}> extends View<T> {
     return false;
   }
 
+  disabled() {}
+
   submit(data) {}
 }
 

@@ -29,7 +29,11 @@ const create: RequestHandler = async (req, res) => {
 };
 
 const update: RequestHandler<{ id: string }> = async (req, res) => {
-  const product = { ...req.body, thumbnail: createThumnbnailUrl(req.file?.filename) };
+  const { thumbnail_url, ...rest } = req.body;
+  const product = {
+    ...rest,
+    thumbnail: thumbnail_url ? thumbnail_url : createThumnbnailUrl(req.file?.filename),
+  };
 
   const transaction = await POOL.TRANSACTION();
   try {

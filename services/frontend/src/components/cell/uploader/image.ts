@@ -20,8 +20,6 @@ class ImageUploader extends View<ImageUploaderData> {
     public options: ImageUploaderOptions = {},
   ) {
     super({ ...data });
-
-    console.log(this.data);
   }
 
   override template() {

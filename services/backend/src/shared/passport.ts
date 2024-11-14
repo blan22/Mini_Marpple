@@ -30,6 +30,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
+  console.log('serializeUser: ', user);
   done(null, user.id);
 });
 
@@ -37,7 +38,6 @@ passport.deserializeUser(async (id: number, done) => {
   try {
     const result = await memberRepository.findById(id);
     const user = result[0];
-
     if (!user) throw Error('유저를 찾을 수 없습니다.');
 
     done(null, user);

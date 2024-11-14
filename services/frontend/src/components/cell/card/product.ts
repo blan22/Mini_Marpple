@@ -4,6 +4,7 @@ import klass from './card.module.scss';
 import type { Product } from '@monorepo/shared';
 
 interface ProductCardData extends Omit<Product, 'thumbnail'> {
+  thumbnail: string;
   href: string;
 }
 
@@ -23,7 +24,7 @@ class ProductCard extends View<ProductCardData> {
       <${this.options.tagName} class="${klass.product_card}">
         <a href="${this.data.href}">
           ${new Image({
-            src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Ward_Cunningham_-_Commons-1.jpg/1920px-Ward_Cunningham_-_Commons-1.jpg',
+            src: this.data.thumbnail,
           })}
           <div class="${klass.product_content}">
             ${new Typography(

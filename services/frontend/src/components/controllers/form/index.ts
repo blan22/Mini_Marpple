@@ -14,12 +14,10 @@ class FormController<T extends object = {}> extends Enable<T> {
   }
 
   validate(formData: FormData) {
-    console.log(Object.fromEntries(formData.entries()));
     return this._validator.parseAsync(Object.fromEntries(formData.entries()));
   }
 
   setMultipartsInFormData(formData: FormData) {
-    console.log(Object.fromEntries(formData.entries()));
     each(([key, value]: [string, File | null]) => formData.set(key, value), entries(this.view.multiparts));
   }
 
@@ -35,15 +33,14 @@ class FormController<T extends object = {}> extends Enable<T> {
   }
 
   @on('submit')
-  private async _submit(e: SubmitEvent) {
+  private _submit(e: SubmitEvent) {
     e.preventDefault();
 
     const formData: FormData = new FormData(e.target as HTMLFormElement);
-    formData.forEach((d) => console.log(d));
 
     if (this.view.isMultiparts()) this.setMultipartsInFormData(formData);
 
-    await this.validate(formData)
+    this.validate(formData)
       .then((result) => this.view.submit(result))
       .catch(this.emitValidationError.bind(this));
   }

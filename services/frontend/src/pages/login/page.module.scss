@@ -1,0 +1,23 @@
+.container {
+  @include flex(center, center,column);
+  gap: 3rem;
+  h1 {
+    margin-top: 4rem;
+  }
+}
+
+.left {
+  width: 560px;
+}
+
+.right {
+  flex: 1;
+  @include flex(space-between, center, column);
+  gap: 10px;
+}
+
+.login_form {
+  width: 500px;
+  @include flex(center, center, column);
+  gap: 1.5rem;
+}

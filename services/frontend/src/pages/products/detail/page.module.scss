@@ -1,0 +1,23 @@
+.container {
+  @include flex(space-between, flex-start);
+  gap: 2rem;
+}
+
+.left {
+  width: 560px;
+  height: 560px;
+}
+
+.right {
+  flex: 1;
+  @include flex(space-between, start, column);
+  gap: 1.5rem;
+}
+
+.stock {
+  background-color: $dim_5;
+  padding: ptr(10) ptr(10);
+  border-radius: ptr(5);
+  width: 100%;
+  @include flex(space-between, center);
+}

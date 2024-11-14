@@ -1,5 +1,7 @@
-import { ProductsPage } from './page';
+import { ProductPage } from './page';
+import { ProductDetailPage } from './detail/page';
 
 export const productRouter = {
-  ['/products']: ProductsPage,
+  ['/product']: ProductPage,
+  ['/product/:id']: ProductDetailPage,
 };

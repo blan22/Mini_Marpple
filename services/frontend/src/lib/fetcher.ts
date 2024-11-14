@@ -18,10 +18,7 @@ export async function http<T extends any>(path: string, config: FetcherRequestIn
 
   if (!response.ok) {
     const errorJson = await response.json();
-    const error = HttpError.fromRequest(request, {
-      ...response,
-      statusText: errorJson.message || response.statusText,
-    });
+    const error = HttpError.fromRequest(request, response, errorJson.message || response.statusText);
     throw error;
   }
 

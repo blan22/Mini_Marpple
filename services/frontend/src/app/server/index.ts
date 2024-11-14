@@ -4,11 +4,10 @@ import favicon from '../../../public/favicon.png';
 import { ClientRouter } from '../router';
 import { getProductById, getProductsByQuery } from '../../lib/api';
 import { convertURLtoFile } from '../../lib/utils';
-import { pipe, reduce } from '@fxts/core';
 
 const server = app();
 
-server.get(ClientRouter['/'].toString(), function (req, res) {
+server.get(ClientRouter['/'].toString(), async function (req, res) {
   const layoutData: LayoutData = {
     head: {
       title: 'HOME',
@@ -22,11 +21,20 @@ server.get(ClientRouter['/'].toString(), function (req, res) {
       ],
     },
   };
+  const result = await getProductsByQuery();
+  const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data?.map(
+    (product) => ({
+      ...product,
+      category: shared.getCategoryNameById(product.category_id),
+      href: `/product/${product.id}`,
+    }),
+  );
+
   res.locals.layoutData = layoutData;
-  res.send(new MetaView(ClientRouter['/']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml());
+  res.send(new MetaView(ClientRouter['/']({ products }, { test: true }), res.locals.layoutData).toHtml());
 });
 
-server.get(ClientRouter['/products'].toString(), function (req, res) {
+server.get(ClientRouter['/product'].toString(), async function (req, res) {
   const layoutData: LayoutData = {
     head: {
       title: 'PRODUCTS',
@@ -40,9 +48,45 @@ server.get(ClientRouter['/products'].toString(), function (req, res) {
       ],
     },
   };
+
+  const result = await getProductsByQuery();
+  const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data?.map(
+    (product) => ({
+      ...product,
+      category: shared.getCategoryNameById(product.category_id),
+      href: `/product/${product.id}`,
+    }),
+  );
+
   res.locals.layoutData = layoutData;
+  res.send(new MetaView(ClientRouter['/product']({ products }), res.locals.layoutData).toHtml());
+});
+
+server.get(ClientRouter['/product/:id'].toString(), async function (req, res) {
+  const layoutData: LayoutData = {
+    head: {
+      title: 'ADMIN PRODUCT UPDATE',
+      description: '',
+      link_tags: [
+        {
+          rel: 'icon',
+          href: favicon,
+          type: 'image/png',
+        },
+      ],
+    },
+  };
+  res.locals.layoutData = layoutData;
+
+  const result = await getProductById(parseInt(req.params.id!));
+  const product = shared.takeOne(result.data);
+  const thumbnail = await convertURLtoFile(product.thumbnail);
+
   res.send(
-    new MetaView(ClientRouter['/products']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
+    new MetaView(
+      ClientRouter['/product/:id']({ ...product, thumbnail_url: product.thumbnail, thumbnail }),
+      res.locals.layoutData,
+    ).toHtml(),
   );
 });
 
@@ -61,19 +105,16 @@ server.get(ClientRouter['/admin'].toString(), async function (req, res) {
     },
   };
   const result = await getProductsByQuery();
-  const products: (Omit<Product, 'thumbnail'> & { href: string })[] = Array.from({ length: 16 }, (_, index) => ({
-    id: index,
-    name: `product${index + 1}`,
-    price: 100,
-    stock: 10,
-    category: 'goods',
-    createAt: new Date(),
-    updateAt: new Date(),
-    href: `/admin/${index}`,
-  }));
+  const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data?.map(
+    (product) => ({
+      ...product,
+      category: shared.getCategoryNameById(product.category_id),
+      href: `/admin/${product.id}`,
+    }),
+  );
 
   res.locals.layoutData = layoutData;
-  res.send(new MetaView(ClientRouter['/admin']({ products }, { test: true }), res.locals.layoutData).toHtml());
+  res.send(new MetaView(ClientRouter['/admin']({ products }), res.locals.layoutData).toHtml());
 });
 
 server.get(ClientRouter['/admin/create'].toString(), function (req, res) {
@@ -164,5 +205,25 @@ server.get(ClientRouter['/@/orders'].toString(), function (req, res) {
   res.locals.layoutData = layoutData;
   res.send(
     new MetaView(ClientRouter['/@/orders']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
+  );
+});
+
+server.get(ClientRouter['/login'].toString(), function (req, res) {
+  const layoutData: LayoutData = {
+    head: {
+      title: 'LOGIN',
+      description: '',
+      link_tags: [
+        {
+          rel: 'icon',
+          href: favicon,
+          type: 'image/png',
+        },
+      ],
+    },
+  };
+  res.locals.layoutData = layoutData;
+  res.send(
+    new MetaView(ClientRouter['/login']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
   );
 });

@@ -17,6 +17,11 @@ router.post(
 
 router.get('/:id', productController.findById);
 
-router.patch('/:id', uploadMiddleware, productController.update);
+router.patch(
+  '/:id',
+  uploadMiddleware,
+  zodMiddleware(shared.UpdateProductSchema.omit({ thumbnail: true })),
+  productController.update,
+);
 
 export default router;
