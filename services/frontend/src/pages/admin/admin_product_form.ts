@@ -27,7 +27,7 @@ class AdminProductForm<T extends ZodObject<any, any>> extends Form<Partial<Admin
 
     this._formController = new FormController(this, schema);
     this._imageUploaderView = new ImageUploader({ thumbnail: this.data.thumbnail }, { name: 'thumbnail' });
-    this._thumbnailView = new Thumbnail({ url: this.data.thumbnail_url ? this.data.thumbnail_url : null });
+    this._thumbnailView = new Thumbnail({ url: this.data.thumbnailUrl ? this.data.thumbnailUrl : null });
     this._messageView = new Message({ text: '' });
   }
 
@@ -54,7 +54,7 @@ class AdminProductForm<T extends ZodObject<any, any>> extends Form<Partial<Admin
           },
           {
             name: 'category',
-            defaultValue: this.data.category_id ? 'goods' : null,
+            defaultValue: this.data.category_id ? this.data.category : null,
           },
         )}
         <div class="${klass.stock}">
@@ -63,7 +63,7 @@ class AdminProductForm<T extends ZodObject<any, any>> extends Form<Partial<Admin
             {},
             {
               name: 'price',
-              require: true,
+              required: true,
               min: 100,
               max: 10000000,
               defaultValue: this.data.price ? parseInt(this.data.price) : 100,
@@ -72,7 +72,7 @@ class AdminProductForm<T extends ZodObject<any, any>> extends Form<Partial<Admin
         </div>
         <div class="${klass.stock}">
           ${new Typography({ text: '수량' })}
-          ${new Range({}, { name: 'stock', require: true, min: 0, max: 1000, defaultValue: this.data.stock ?? 0 })}
+          ${new Range({}, { name: 'stock', required: true, min: 0, max: 1000, defaultValue: this.data.stock ?? 0 })}
         </div>
         <div class="${klass.message}">${this._messageView}</div>
         ${new Button({ text: '등록' }, { variant: 'primary', type: 'submit' })}

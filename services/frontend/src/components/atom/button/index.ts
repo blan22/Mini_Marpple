@@ -7,7 +7,7 @@ interface ButtonData {
 }
 
 interface ButtonOptions {
-  variant: 'primary' | 'line';
+  variant: 'primary' | 'line' | 'none';
   disabled?: boolean;
   type?: 'reset' | 'submit' | 'button';
 }

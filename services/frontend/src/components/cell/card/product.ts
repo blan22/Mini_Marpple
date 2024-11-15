@@ -2,9 +2,11 @@ import { html, View } from 'rune-ts';
 import { Image, Typography } from '../../atom';
 import klass from './card.module.scss';
 import type { Product } from '@monorepo/shared';
+import { getCategoryNameById } from '../../../lib/utils';
 
-interface ProductCardData extends Omit<Product, 'thumbnail'> {
+interface ProductCardData extends Omit<Product, 'thumbnail' | 'price'> {
   thumbnail: string;
+  price: string;
   href: string;
 }
 
@@ -28,7 +30,7 @@ class ProductCard extends View<ProductCardData> {
           })}
           <div class="${klass.product_content}">
             ${new Typography(
-              { text: this.data.category },
+              { text: getCategoryNameById(this.data.category_id) },
               {
                 color: 'BLACK',
                 weight: 'BOLD',
@@ -44,7 +46,7 @@ class ProductCard extends View<ProductCardData> {
               },
             )}
             ${new Typography(
-              { text: `${this.data.price}원` },
+              { text: `${parseInt(this.data.price).toLocaleString('ko-kr')}원` },
               {
                 color: 'BLACK',
                 weight: 'BOLD',

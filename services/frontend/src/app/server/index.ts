@@ -2,7 +2,7 @@ import { MetaView, app, type LayoutData } from '@rune-ts/server';
 import shared, { type Product } from '@monorepo/shared';
 import favicon from '../../../public/favicon.png';
 import { ClientRouter } from '../router';
-import { getProductById, getProductsByQuery } from '../../lib/api';
+import { getCart, getProductById, getProductsByQuery } from '../../lib/api';
 import { convertURLtoFile } from '../../lib/utils';
 
 const server = app();
@@ -22,13 +22,11 @@ server.get(ClientRouter['/'].toString(), async function (req, res) {
     },
   };
   const result = await getProductsByQuery();
-  const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data?.map(
-    (product) => ({
-      ...product,
-      category: shared.getCategoryNameById(product.category_id),
-      href: `/product/${product.id}`,
-    }),
-  );
+  const products: (Product & { href: string })[] = result.data?.map((product) => ({
+    ...product,
+    category: shared.getCategoryNameById(product.category_id),
+    href: `/product/${product.id}`,
+  }));
 
   res.locals.layoutData = layoutData;
   res.send(new MetaView(ClientRouter['/']({ products }, { test: true }), res.locals.layoutData).toHtml());
@@ -50,13 +48,11 @@ server.get(ClientRouter['/product'].toString(), async function (req, res) {
   };
 
   const result = await getProductsByQuery();
-  const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data?.map(
-    (product) => ({
-      ...product,
-      category: shared.getCategoryNameById(product.category_id),
-      href: `/product/${product.id}`,
-    }),
-  );
+  const products: (Product & { href: string })[] = result.data?.map((product) => ({
+    ...product,
+    category: shared.getCategoryNameById(product.category_id),
+    href: `/product/${product.id}`,
+  }));
 
   res.locals.layoutData = layoutData;
   res.send(new MetaView(ClientRouter['/product']({ products }), res.locals.layoutData).toHtml());
@@ -79,12 +75,17 @@ server.get(ClientRouter['/product/:id'].toString(), async function (req, res) {
   res.locals.layoutData = layoutData;
 
   const result = await getProductById(parseInt(req.params.id!));
-  const product = shared.takeOne(result.data);
+  const product: Product = shared.takeOne(result.data);
   const thumbnail = await convertURLtoFile(product.thumbnail);
 
   res.send(
     new MetaView(
-      ClientRouter['/product/:id']({ ...product, thumbnail_url: product.thumbnail, thumbnail }),
+      ClientRouter['/product/:id']({
+        ...product,
+        category: shared.getCategoryNameById(product.category_id),
+        thumbnailUrl: product.thumbnail,
+        thumbnail,
+      }),
       res.locals.layoutData,
     ).toHtml(),
   );
@@ -157,18 +158,23 @@ server.get(ClientRouter['/admin/:id'].toString(), async function (req, res) {
   res.locals.layoutData = layoutData;
 
   const result = await getProductById(parseInt(req.params.id!));
-  const product = shared.takeOne(result.data);
+  const product: Product = shared.takeOne(result.data);
   const thumbnail = await convertURLtoFile(product.thumbnail);
 
   res.send(
     new MetaView(
-      ClientRouter['/admin/:id']({ ...product, thumbnail_url: product.thumbnail, thumbnail }),
+      ClientRouter['/admin/:id']({
+        ...product,
+        thumbnailUrl: product.thumbnail,
+        thumbnail,
+        category: shared.getCategoryNameById(product.category_id),
+      }),
       res.locals.layoutData,
     ).toHtml(),
   );
 });
 
-server.get(ClientRouter['/@/cart'].toString(), function (req, res) {
+server.get(ClientRouter['/@/cart'].toString(), async function (req, res) {
   const layoutData: LayoutData = {
     head: {
       title: 'CART',
@@ -182,10 +188,9 @@ server.get(ClientRouter['/@/cart'].toString(), function (req, res) {
       ],
     },
   };
+
   res.locals.layoutData = layoutData;
-  res.send(
-    new MetaView(ClientRouter['/@/cart']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
-  );
+  res.send(new MetaView(ClientRouter['/@/cart']({ cart: null }), res.locals.layoutData).toHtml());
 });
 
 server.get(ClientRouter['/@/orders'].toString(), function (req, res) {

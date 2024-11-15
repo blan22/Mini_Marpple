@@ -3,6 +3,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import * as memberRepository from '../routes/member/repository';
 import CONFIG from './config';
 import bcrypy from 'bcrypt';
+import { RequestHandler } from 'express';
 
 passport.use(
   new LocalStrategy(
@@ -46,4 +47,10 @@ passport.deserializeUser(async (id: number, done) => {
   }
 });
 
-export { passport };
+const ensureAuthMiddleware: RequestHandler = (req, res, next) => {
+  if (req.isAuthenticated()) return next();
+
+  res.status(401).json({ message: '로그인이 필요합니다.' });
+};
+
+export { passport, ensureAuthMiddleware };

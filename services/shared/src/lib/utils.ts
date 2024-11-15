@@ -10,7 +10,7 @@ const getCategoryNameById = (category_id: 1 | 2 | 3 | 4) => {
   return hashMap[category_id];
 };
 
-const takeOne = <T>(iterable: Iterable<T>) => {
+const takeOne = <T>(iterable: Iterable<T>): T => {
   return iterable[Symbol.iterator]().next().value;
 };
 

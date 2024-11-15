@@ -1,14 +1,36 @@
-import { html, View } from 'rune-ts';
+import { CustomEventWithDetail, html, on, View } from 'rune-ts';
 import type { Product } from '@monorepo/shared';
 import { ProductCard } from './product';
 import { Button, Typography } from '../../atom';
 import klass from './card.module.scss';
 
-interface CartCardData extends Omit<Product, 'thumbnail'> {
+export interface CartCardData extends Product {
+  cart_product_item_id: number;
   href: string;
+  quantity: number;
 }
 
+export class QuantityUpdateEvent extends CustomEventWithDetail<CartCardData> {}
+
+export class CartProductDeleteEvent extends CustomEventWithDetail<{ cart_product_item_id: number }> {}
+
 class CartCard extends View<CartCardData> {
+  private _total_quantity_view: Typography;
+  private _total_price_view: Typography;
+
+  constructor(data: CartCardData) {
+    super({ ...data });
+
+    this._total_quantity_view = new Typography(
+      { text: `수량 / ${this.data.quantity}개` },
+      { size: 'SIZE_16', weight: 'BOLD', as: 'span' },
+    );
+    this._total_price_view = new Typography(
+      { text: `${(this.data.quantity * parseInt(this.data.price)).toLocaleString('ko-kr')}원` },
+      { size: 'SIZE_20', weight: 'BOLD', as: 'h3' },
+    );
+  }
+
   override template() {
     return html`
       <li class="${klass.cart_card}">
@@ -16,14 +38,14 @@ class CartCard extends View<CartCardData> {
           <div class="${klass.cart_card_content}">${new ProductCard(this.data, { tagName: 'div' })}</div>
           <div class="${klass.cart_card_action}">
             <div>
-              <span>✕</span>
+              <div>${new Button({ text: '✕' }, { variant: 'none', type: 'reset' })}</div>
             </div>
-            ${new Button({ text: '수량 변경' })}
+            ${new Button({ text: '수량 변경' }, { variant: 'line' })}
           </div>
         </div>
         <div class="${klass.cart_card_detail}">
           ${new Typography(
-            { text: '수량 / 1개' },
+            { text: `수량 / ${this.data.quantity}개` },
             {
               size: 'SIZE_14',
               color: 'BLACK',
@@ -32,7 +54,7 @@ class CartCard extends View<CartCardData> {
             },
           )}
           ${new Typography(
-            { text: '15,000원' },
+            { text: `${(parseInt(this.data.price) * this.data.quantity).toLocaleString('kr-ko')}원` },
             {
               size: 'SIZE_14',
               color: 'BLACK',
@@ -43,6 +65,25 @@ class CartCard extends View<CartCardData> {
         </div>
       </li>
     `;
+  }
+
+  @on('click', 'button[type=button]')
+  _updateQuantityEvent() {
+    this.dispatchEvent(QuantityUpdateEvent, { detail: { ...this.data }, bubbles: true });
+  }
+
+  @on('click', 'button[type=reset]')
+  _deleteCartProductEvent() {
+    this.dispatchEvent(CartProductDeleteEvent, {
+      detail: { cart_product_item_id: this.data.cart_product_item_id },
+      bubbles: true,
+    });
+  }
+
+  updateQuantityView(quantity: number) {
+    this.data.quantity = quantity;
+    this._total_quantity_view.element().textContent = `총 ${this.data.quantity}개의 상품 금액`;
+    this._total_price_view.element().textContent = `${(this.data.quantity * parseInt(this.data.price)).toLocaleString('ko-kr')}원`;
   }
 }
 

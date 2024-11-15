@@ -4,11 +4,22 @@
   width: 100%;
   height: ptr(56);
   border-radius: ptr(8);
+  font-family: $font-family-kr;
 }
 
 .primary {
   background-color: $primary;
   color: $white;
+}
+
+.line {
+  color: $black;
+  border: 1px solid $gray_20;
+}
+
+.none {
+  all: unset;
+  cursor: pointer;
 }
 
 .disabled {

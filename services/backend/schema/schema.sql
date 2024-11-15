@@ -114,6 +114,11 @@ INSERT INTO users (username, email, password)
 VALUES
 ('blan19', 'oponize@naver.com', '$2b$10$jRlhliqoRrxVLZ2tBTO8me2Z7NaqYJFdNJt2iUWlARlZms8dKsPWy');
 
+-- Cart initializing
+INSERT INTO carts (user_id, created_at, updated_at)
+SELECT id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+FROM users;
+
 -- -- 사용자 테이블
 -- CREATE TABLE users (
 --     id SERIAL PRIMARY KEY,

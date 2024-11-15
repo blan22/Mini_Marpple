@@ -1,7 +1,7 @@
-import { CardPage } from './cart/page';
+import { CartPage } from './cart/page';
 import { OrdersPage } from './orders/page';
 
 export const userRouter = {
-  ['/@/cart']: CardPage,
+  ['/@/cart']: CartPage,
   ['/@/orders']: OrdersPage,
 };

@@ -45,7 +45,7 @@ class LoginForm extends Form {
   override submit(data) {
     login(data)
       .then(() => {
-        // redirect('/');
+        redirect('/');
       })
       .catch((error: HttpError) => {
         this._messageView.setMessage('');

@@ -6,16 +6,22 @@ import { ProductDetailForm } from './product_detail_form';
 
 export class ProductDetailPage extends Page<AdminProductPageData> {
   override template(_) {
-    return html`${new Layout(
-      {
-        content: html`<div class="${klass.container}">
-          <div class="${klass.left}">${new Thumbnail({ url: this.data.thumbnail_url })}</div>
-          ${new ProductDetailForm(this.data)}
-        </div>`,
-      },
-      {
-        header: new Header({}),
-      },
-    )}`;
+    return html`
+      <div>
+        ${new Layout(
+          {
+            content: html`
+              <div class="${klass.container}">
+                <div class="${klass.left}">${new Thumbnail({ url: this.data.thumbnailUrl })}</div>
+                ${new ProductDetailForm(this.data)}
+              </div>
+            `,
+          },
+          {
+            header: new Header({}),
+          },
+        )}
+      </div>
+    `;
   }
 }

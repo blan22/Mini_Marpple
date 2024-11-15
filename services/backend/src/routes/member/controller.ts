@@ -5,12 +5,7 @@ const login: RequestHandler = async (req, res) => {
 };
 
 const getSession: RequestHandler = async (req, res) => {
-  console.log(req.user);
   res.status(200).json({ message: '' });
 };
 
 export { login, getSession };
-
-// 어드민, 메인 리스트 페이지
-// 카트 페이지
-// 주문 내역 페이지

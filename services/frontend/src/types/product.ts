@@ -1,14 +1,10 @@
-interface ProductResponse {
-  id: number;
-  name: string;
-  category_id: 1 | 2 | 3 | 4;
+import { type Product } from '@monorepo/shared';
+
+type AdminProductPageData = Omit<Product, 'thumbnail' | 'price'> & {
+  thumbnail: File;
+  thumbnailUrl: string;
+  category: string;
   price: string;
-  stock: number;
-  thumbnail: string;
-  created_at: string;
-  updated_at: string;
-}
+};
 
-type AdminProductPageData = Omit<ProductResponse, 'thumbnail'> & { thumbnail: File; thumbnail_url: string };
-
-export type { ProductResponse, AdminProductPageData };
+export type { AdminProductPageData };

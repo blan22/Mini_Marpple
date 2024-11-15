@@ -4,8 +4,8 @@ import { passport } from '../../shared/passport';
 
 const router = express.Router();
 
-router.get('/', memberController.getSession);
+router.route('/').get(memberController.getSession);
 
-router.post('/login', passport.authenticate('local'), memberController.login);
+router.route('/login').post(passport.authenticate('local'), memberController.login);
 
 export default router;

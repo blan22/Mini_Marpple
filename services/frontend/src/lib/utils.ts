@@ -1,5 +1,12 @@
 import { html } from 'rune-ts';
 
+enum CATEGORIES {
+  GOODS = 'goods',
+  CLOTH = 'cloth',
+  FOOD = 'food',
+  BOOK = 'book',
+}
+
 export const klasses = <T extends any>(...args: T[]) => html`${args.filter(Boolean).join(' ')}`;
 
 export const convertURLtoFile = async (url: string) => {
@@ -9,6 +16,16 @@ export const convertURLtoFile = async (url: string) => {
   const filename = url.split('/').pop();
   const metadata = { type: `image/${ext}` };
   return new File([data], filename!, metadata);
+};
+
+export const getCategoryNameById = (category_id: 1 | 2 | 3 | 4) => {
+  const hashMap = {
+    1: CATEGORIES['GOODS'],
+    2: CATEGORIES['CLOTH'],
+    3: CATEGORIES['FOOD'],
+    4: CATEGORIES['BOOK'],
+  };
+  return hashMap[category_id];
 };
 
 export const getParamsFromUrl = () => {

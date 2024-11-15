@@ -10,6 +10,11 @@ module.exports = {
     es6: true,
     node: true,
   },
+  globals: {
+    document: 'readonly',
+    global: 'readonly',
+    window: 'readonly',
+  },
   root: true,
   rules: {
     'no-var': 'warn',

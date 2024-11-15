@@ -1,10 +1,10 @@
-import { html, View } from 'rune-ts';
+import { html, on, View } from 'rune-ts';
 import klass from './range.module.scss';
 
 interface RangeData {}
 
 interface RangeOptions {
-  require?: boolean;
+  required?: boolean;
   min?: number;
   max?: number;
   pattern?: string;
@@ -22,7 +22,7 @@ class Range extends View<RangeData> {
   override template() {
     return html`
       <div class="${klass.range}">
-        <button type="button" onclick="${this.options.name}.stepDown()">-</button>
+        <button class="decrease" type="button">-</button>
         <input
           type="number"
           pattern="^\\d+$"
@@ -31,11 +31,23 @@ class Range extends View<RangeData> {
           min="${this.options.min ?? 0}"
           max="${this.options.max ?? 0}"
           name="${this.options.name ? this.options.name : ''}"
-          ${this.options.require ? 'require' : ''}
+          ${this.options.required ? 'require' : ''}
         />
-        <button type="button" onclick="${this.options.name}.stepUp()">+</button>
+        <button class="increase" type="button">+</button>
       </div>
     `;
+  }
+
+  @on('click', '.increase')
+  _increase() {
+    this.element().querySelector('input')?.stepUp();
+    this.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  @on('click', '.decrease')
+  _decrease() {
+    this.element().querySelector('input')?.stepDown();
+    this.dispatchEvent(new Event('change', { bubbles: true }));
   }
 }
 

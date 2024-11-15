@@ -1,10 +1,8 @@
 import { html, Page } from 'rune-ts';
-
 import { Layout, Header } from '../../../components';
 import { AdminProductCreateForm } from './admin_product_create_form';
-import type { ProductResponse } from '../../../types/product';
 
-export class AdminProductCreatePage extends Page<ProductResponse> {
+export class AdminProductCreatePage extends Page<{}> {
   override template() {
     return html`
       <div>

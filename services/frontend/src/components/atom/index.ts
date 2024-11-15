@@ -6,3 +6,4 @@ export * from './typography';
 export * from './message';
 export * from './divider';
 export * from './input';
+export * from './toast';

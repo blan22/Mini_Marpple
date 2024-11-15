@@ -13,6 +13,7 @@ const findByQuery = (offset: number, limit: number) => {
   return POOL.QUERY`
     SELECT *
     FROM products
+    ORDER BY created_at DESC
     LIMIT ${limit} OFFSET ${offset}
   `;
 };

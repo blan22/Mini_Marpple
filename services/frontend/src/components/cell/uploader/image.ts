@@ -27,7 +27,10 @@ class ImageUploader extends View<ImageUploaderData> {
       <div class="${klass.uploader}">
         <div class="${klass.name}">
           ${this.data.thumbnail
-            ? html`${new Typography({ text: this.data.thumbnail.name })}`
+            ? html`${new Typography(
+                { text: this.data.thumbnail.name },
+                { as: 'span', color: 'BLACK', weight: 'MEDIUM', size: 'SIZE_16', full: true },
+              )}`
             : html`${new Typography(
                 { text: this.options.defaultValue ?? '썸네일을 첨부해주세요.' },
                 { as: 'span', color: 'GRAY_50', weight: 'MEDIUM', size: 'SIZE_16', full: true },

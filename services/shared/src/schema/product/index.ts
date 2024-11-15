@@ -24,6 +24,17 @@ const ProductSchema = z.object({
         .min(100, '가격은 최소 100원 이상 가능합니다.')
         .max(10000000, '가격은 최대 1000만원까지 가능합니다.'),
     ),
+  category_id: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
+  thumbnail: z.string(),
+  create_at: z.date(),
+  update_at: z.date(),
+});
+
+const CreateProductSchema = ProductSchema.pick({
+  name: true,
+  stock: true,
+  price: true,
+}).extend({
   category: z.enum(['cloth', 'goods', 'book', 'food'], { message: '카테고리 내 값을 선택해주세요.' }),
   thumbnail: z
     .instanceof(File, { message: '썸네일을 첨부해주세요.' })
@@ -33,16 +44,6 @@ const ProductSchema = z.object({
     .refine((file) => {
       return ACCEPTED_IMAGE_TYPES.includes(file.type);
     }, '이미지는 png 포맷만 가능합니다.'),
-  create_at: z.date(),
-  update_at: z.date(),
-});
-
-const CreateProductSchema = ProductSchema.pick({
-  name: true,
-  stock: true,
-  price: true,
-  category: true,
-  thumbnail: true,
 });
 
 const UpdateProductSchema = CreateProductSchema.omit({ thumbnail: true })
@@ -60,7 +61,7 @@ const UpdateProductSchema = CreateProductSchema.omit({ thumbnail: true })
     thumbnail_url: z.string().optional(),
   });
 
-type Product = z.infer<typeof ProductSchema>;
+type Product = Omit<z.infer<typeof ProductSchema>, 'price'> & { price: string };
 
 type CreateProduct = z.infer<typeof CreateProductSchema>;
 
