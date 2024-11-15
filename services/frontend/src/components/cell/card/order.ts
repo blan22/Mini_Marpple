@@ -4,7 +4,7 @@ import { Button, Divider, Typography } from '../../atom';
 import { ProductCard } from './product';
 import klass from './card.module.scss';
 
-interface OrderCardData extends Omit<Product, 'thumbnail'> {
+interface OrderCardData extends Product {
   href: string;
 }
 

@@ -11,13 +11,15 @@ import {
   QuantityUpdateEvent,
   CartProductDeleteEvent,
   CartCardList,
+  toast,
 } from '../../../components';
-import { getCart } from '../../../lib/api';
+import { deleteCartProduct, getCart } from '../../../lib/api';
 import { CartItemQuantityUpdateForm } from './cart_item_quantity_update_form';
-import { each, filter, pipe, reduce } from '@fxts/core';
+import { each, filter, pipe } from '@fxts/core';
+import type { HttpError } from '../../../lib/httpError';
 
 export interface CardPageData {
-  cart: Awaited<ReturnType<typeof getCart>>['data'] | null;
+  cart: Awaited<ReturnType<typeof getCart>>['data'];
 }
 
 export class CartPage extends Page<CardPageData> {
@@ -29,10 +31,23 @@ export class CartPage extends Page<CardPageData> {
   constructor(data: CardPageData) {
     super({ ...data });
 
-    this._totalQuantityView = new Typography({ text: `0개` }, { size: 'SIZE_12', weight: 'BOLD', as: 'span' });
-    this._totalPriceView = new Typography({ text: `0원` }, { size: 'SIZE_12', weight: 'BOLD', as: 'span' });
-    this._cartCardList = new CartCardList([]);
+    this._cartCardList = new CartCardList(
+      this.data.cart.cart_product_items.map((item) => ({
+        ...item.product,
+        cart_product_item_id: item.id,
+        quantity: item.quantity,
+        href: `/product/${item.product.id}`,
+      })),
+    );
+
+    const { quantity: totalQuantity, price: totalPrice } = this._total();
+
     this._modalView = new Modal();
+    this._totalQuantityView = new Typography(
+      { text: `${totalQuantity}개` },
+      { size: 'SIZE_12', weight: 'BOLD', as: 'span' },
+    );
+    this._totalPriceView = new Typography({ text: `${totalPrice}원` }, { size: 'SIZE_12', weight: 'BOLD', as: 'span' });
   }
   override template(_) {
     return html`
@@ -89,7 +104,12 @@ export class CartPage extends Page<CardPageData> {
 
   @on(CartProductDeleteEvent)
   _clickCartProductDeleteButton(e: CartProductDeleteEvent) {
-    console.log(e);
+    deleteCartProduct(e.detail.cartProductItemId)
+      .then(() => {
+        this._cartCardList.removeBy((item) => item.data.cart_product_item_id === e.detail.cartProductItemId);
+        this._cartCardList.redraw();
+      })
+      .catch((error: HttpError) => toast.show(error.message, { variant: 'error' }));
   }
 
   _total() {
@@ -119,19 +139,5 @@ export class CartPage extends Page<CardPageData> {
     const { quantity: totalQuantity, price: totalPrice } = this._total();
     this._totalQuantityView.element().textContent = `${totalQuantity}개`;
     this._totalPriceView.element().textContent = `${totalPrice.toLocaleString('ko-kr')}원`;
-  }
-
-  override async onRender() {
-    const cart = await getCart();
-    this._cartCardList.add(
-      cart.data.cart_product_items.map((item) => ({
-        ...item.product,
-        cart_product_item_id: item.id,
-        quantity: item.quantity,
-        href: `/product/${item.product.id}`,
-      })),
-    );
-    this._cartCardList.redraw();
-    this._updateCartProductTotal();
   }
 }

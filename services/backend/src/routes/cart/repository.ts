@@ -1,7 +1,7 @@
 import POOL from '../../shared/db';
 import shared, { type Cart, type CartProduct, type Product } from '@monorepo/shared';
 
-const findById = async (
+const findCartById = async (
   user_id: number,
 ): Promise<
   Cart & {
@@ -43,6 +43,15 @@ const findById = async (
   );
 };
 
+const findCartProductById = (user_id: number, cart_product_id: number) => {
+  return POOL.QUERY`
+      SELECT cp.id 
+      FROM cart_product cp
+      JOIN carts c ON cp.cart_id = c.id
+      WHERE cp.id = ${cart_product_id} AND c.user_id = ${user_id}
+  `.then((data: { id: number }[]) => shared.takeOne(data));
+};
+
 const create = (data: { cart_id: number; product_id: number; quantity: number }) => {
   return POOL.QUERY`INSERT INTO cart_product ${POOL.VALUES(data)}`;
 };
@@ -63,4 +72,11 @@ const update = (cart_product_id: number, quantity: number) => {
   `;
 };
 
-export { create, findById, increase, update };
+const remove = (cart_product_id: number) => {
+  return POOL.QUERY`
+      DELETE FROM cart_product
+      WHERE id = ${cart_product_id}
+    `;
+};
+
+export { create, findCartById, findCartProductById, increase, update, remove };

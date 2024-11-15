@@ -2,8 +2,10 @@ import { MetaView, app, type LayoutData } from '@rune-ts/server';
 import shared, { type Product } from '@monorepo/shared';
 import favicon from '../../../public/favicon.png';
 import { ClientRouter } from '../router';
-import { getCart, getProductById, getProductsByQuery } from '../../lib/api';
+import { getCart, getCartSS, getProductById, getProductsByQuery } from '../../lib/api';
 import { convertURLtoFile } from '../../lib/utils';
+import { get } from '../../lib/fetcher';
+import type { ServerResponse } from '../../types/common';
 
 const server = app();
 
@@ -189,8 +191,10 @@ server.get(ClientRouter['/@/cart'].toString(), async function (req, res) {
     },
   };
 
+  const cart = await getCartSS(req);
+
   res.locals.layoutData = layoutData;
-  res.send(new MetaView(ClientRouter['/@/cart']({ cart: null }), res.locals.layoutData).toHtml());
+  res.send(new MetaView(ClientRouter['/@/cart']({ cart: cart.data }), res.locals.layoutData).toHtml());
 });
 
 server.get(ClientRouter['/@/orders'].toString(), function (req, res) {

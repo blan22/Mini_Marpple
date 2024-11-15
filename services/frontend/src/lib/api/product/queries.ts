@@ -9,8 +9,8 @@ const getProductsByQuery = () => {
   });
 };
 
-const getProductById = (id: number) => {
-  return get('http://localhost:4000/product', { params: id });
+const getProductById = (productId: number) => {
+  return get('http://localhost:4000/product', { params: productId });
 };
 
 export { getProductsByQuery, getProductById };

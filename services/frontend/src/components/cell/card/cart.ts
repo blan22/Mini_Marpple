@@ -12,20 +12,20 @@ export interface CartCardData extends Product {
 
 export class QuantityUpdateEvent extends CustomEventWithDetail<CartCardData> {}
 
-export class CartProductDeleteEvent extends CustomEventWithDetail<{ cart_product_item_id: number }> {}
+export class CartProductDeleteEvent extends CustomEventWithDetail<{ cartProductItemId: number }> {}
 
 class CartCard extends View<CartCardData> {
-  private _total_quantity_view: Typography;
-  private _total_price_view: Typography;
+  private _totalQuantityView: Typography;
+  private _totalPriceView: Typography;
 
   constructor(data: CartCardData) {
     super({ ...data });
 
-    this._total_quantity_view = new Typography(
+    this._totalQuantityView = new Typography(
       { text: `수량 / ${this.data.quantity}개` },
       { size: 'SIZE_16', weight: 'BOLD', as: 'span' },
     );
-    this._total_price_view = new Typography(
+    this._totalPriceView = new Typography(
       { text: `${(this.data.quantity * parseInt(this.data.price)).toLocaleString('ko-kr')}원` },
       { size: 'SIZE_20', weight: 'BOLD', as: 'h3' },
     );
@@ -75,15 +75,15 @@ class CartCard extends View<CartCardData> {
   @on('click', 'button[type=reset]')
   _deleteCartProductEvent() {
     this.dispatchEvent(CartProductDeleteEvent, {
-      detail: { cart_product_item_id: this.data.cart_product_item_id },
+      detail: { cartProductItemId: this.data.cart_product_item_id },
       bubbles: true,
     });
   }
 
   updateQuantityView(quantity: number) {
     this.data.quantity = quantity;
-    this._total_quantity_view.element().textContent = `총 ${this.data.quantity}개의 상품 금액`;
-    this._total_price_view.element().textContent = `${(this.data.quantity * parseInt(this.data.price)).toLocaleString('ko-kr')}원`;
+    this._totalQuantityView.element().textContent = `총 ${this.data.quantity}개의 상품 금액`;
+    this._totalPriceView.element().textContent = `${(this.data.quantity * parseInt(this.data.price)).toLocaleString('ko-kr')}원`;
   }
 }
 

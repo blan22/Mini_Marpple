@@ -6,11 +6,12 @@ import { zodMiddleware } from '../../shared/zod';
 
 const router = express.Router();
 
-router.route('/').all(ensureAuthMiddleware).get(cartController.getCart).post(cartController.addToCart);
+router.route('/').all(ensureAuthMiddleware).get(cartController.getCart).post(cartController.addProductToCart);
 
 router
   .route('/:id')
   .all(ensureAuthMiddleware)
-  .patch(zodMiddleware(shared.CartProductQuantityUpdateSchema), cartController.updateCart);
+  .patch(zodMiddleware(shared.CartProductQuantityUpdateSchema), cartController.updateCartProduct)
+  .delete(cartController.deleteCartProduct);
 
 export default router;
