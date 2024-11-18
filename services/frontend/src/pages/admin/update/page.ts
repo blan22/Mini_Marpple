@@ -1,5 +1,4 @@
 import { html, Page } from 'rune-ts';
-
 import { Layout, Header } from '../../../components';
 import type { AdminProductPageData } from '../../../types/product';
 import { AdminProductUpdateForm } from './admin_product_update_form';

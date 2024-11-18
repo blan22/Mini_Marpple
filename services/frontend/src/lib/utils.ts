@@ -1,4 +1,7 @@
 import { html } from 'rune-ts';
+import type { LayoutData } from '@rune-ts/server';
+// @ts-ignore
+import favicon from '../../public/favicon.png';
 
 enum CATEGORIES {
   GOODS = 'goods',
@@ -33,6 +36,26 @@ export const getParamsFromUrl = () => {
   // eslint-disable-next-line no-undef
   const segments = window.location.pathname.split('/').filter(Boolean);
   return parseInt(`${segments[segments.length - 1]}`, 10);
+};
+
+export const createMetaData = (data: Partial<LayoutData>): LayoutData => {
+  return {
+    head: {
+      title: data.head?.title ?? '',
+      description: data.head?.title ?? '',
+      link_tags: [
+        {
+          rel: 'icon',
+          href: favicon,
+          type: 'image/png',
+        },
+      ],
+    },
+  };
+};
+
+export const takeOne = <T>(iterable: Iterable<T>): T => {
+  return iterable[Symbol.iterator]().next().value;
 };
 
 export const redirect = (url: string) => {

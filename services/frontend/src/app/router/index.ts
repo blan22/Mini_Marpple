@@ -6,4 +6,5 @@ export const ClientRouter = createRouter({
   ...(await import('../../pages/admin/route')).adminRouter,
   ...(await import('../../pages/@/route')).userRouter,
   ...(await import('../../pages/login/route')).loginRouter,
+  ...(await import('../../pages/error/route')).errorRouter,
 });

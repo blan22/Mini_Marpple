@@ -5,7 +5,7 @@ const login: RequestHandler = async (req, res) => {
 };
 
 const getSession: RequestHandler = async (req, res) => {
-  res.status(200).json({ message: '' });
+  res.status(200).json({ message: '유저 정보 조회에 성공했습니다.', data: req.user });
 };
 
 export { login, getSession };

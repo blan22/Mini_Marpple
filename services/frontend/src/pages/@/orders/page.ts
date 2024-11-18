@@ -1,9 +1,9 @@
 import { html, Page } from 'rune-ts';
 import klass from './page.module.scss';
-import { Button, Image, Select, Layout, Header, Typography } from '../../../components';
+import { Layout, Header, Typography } from '../../../components';
 import { OrderCard } from '../../../components/cell/card';
 
-export class OrdersPage extends Page<{}> {
+export class OrderPage extends Page<{}> {
   override template(_) {
     return html`${new Layout(
       {
@@ -17,22 +17,24 @@ export class OrdersPage extends Page<{}> {
               ${new OrderCard({
                 id: 1,
                 name: `product`,
-                price: 100,
+                price: `100`,
                 stock: 10,
-                category: 'goods',
-                createAt: new Date(),
-                updateAt: new Date(),
+                create_at: new Date(),
+                update_at: new Date(),
                 href: `/admin/1`,
+                category_id: 1,
+                thumbnail: '',
               })}
               ${new OrderCard({
                 id: 1,
                 name: `product`,
-                price: 100,
+                price: `100`,
                 stock: 10,
-                category: 'goods',
-                createAt: new Date(),
-                updateAt: new Date(),
+                create_at: new Date(),
+                update_at: new Date(),
                 href: `/admin/1`,
+                category_id: 2,
+                thumbnail: '',
               })}
             </ul>
           </div>

@@ -1,7 +1,8 @@
 import { get } from '../../fetcher';
+import { SERVER_ENDPOINT } from '../../../shared/constants';
 
 const getProductsByQuery = () => {
-  return get('http://localhost:4000/product', {
+  return get(`${SERVER_ENDPOINT}/product`, {
     query: {
       page: 1,
       limit: 10,
@@ -10,7 +11,7 @@ const getProductsByQuery = () => {
 };
 
 const getProductById = (productId: number) => {
-  return get('http://localhost:4000/product', { params: productId });
+  return get(`${SERVER_ENDPOINT}/product`, { params: productId });
 };
 
 export { getProductsByQuery, getProductById };

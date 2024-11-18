@@ -1,4 +1,5 @@
 .header {
+  width: 100%;
   @include flex(space-between, center);
   padding: 2rem 0;
 }

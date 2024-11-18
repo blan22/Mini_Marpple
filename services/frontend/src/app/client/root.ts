@@ -27,3 +27,4 @@ import '../../pages/admin/create/page.module.scss';
 import '../../pages/admin/update/page.module.scss';
 import '../../pages/products/page.module.scss';
 import '../../pages/products/detail/page.module.scss';
+import '../../pages/error/page.module.scss';

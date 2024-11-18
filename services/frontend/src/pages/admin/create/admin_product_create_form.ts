@@ -10,7 +10,7 @@ class AdminProductCreateForm extends AdminProductForm<typeof CreateProductSchema
     super({ ...data }, CreateProductSchema);
   }
 
-  override submit(data: any) {
+  override submit(data) {
     createProduct(data)
       .then(() => redirect('/admin'))
       .catch((error: HttpError) => toast.show(error.message, { variant: 'error' }));

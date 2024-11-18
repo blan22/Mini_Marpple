@@ -13,15 +13,16 @@ class FormController<T extends object = {}> extends Enable<T> {
     super(view);
   }
 
-  validate(formData: FormData) {
+  private _validate(formData: FormData) {
     return this._validator.parseAsync(Object.fromEntries(formData.entries()));
   }
 
-  setMultipartsInFormData(formData: FormData) {
+  private _setMultipartsInFormData(formData: FormData) {
+    // @ts-ignore
     each(([key, value]: [string, File | null]) => formData.set(key, value), entries(this.view.multiparts));
   }
 
-  emitValidationError(error: ZodError) {
+  private _emitValidationError(error: ZodError) {
     this.dispatchEvent(FormValidationErrorEvent, {
       bubbles: true,
       detail: pipe(
@@ -38,11 +39,11 @@ class FormController<T extends object = {}> extends Enable<T> {
 
     const formData: FormData = new FormData(e.target as HTMLFormElement);
 
-    if (this.view.isMultiparts()) this.setMultipartsInFormData(formData);
+    if (this.view.isMultiparts()) this._setMultipartsInFormData(formData);
 
-    this.validate(formData)
+    this._validate(formData)
       .then((result) => this.view.submit(result))
-      .catch(this.emitValidationError.bind(this));
+      .catch(this._emitValidationError.bind(this));
   }
 }
 
