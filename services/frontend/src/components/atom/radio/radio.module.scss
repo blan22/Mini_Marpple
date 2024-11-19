@@ -1,0 +1,35 @@
+.radio {
+  display: flex;
+  width: 100%;
+
+  input[type='radio'] {
+    display: none;
+  }
+
+  label {
+    width: 100%;
+    border: ptr(1) solid $gray_20;
+    padding: ptr(15) ptr(0);
+    text-align: center;
+    border-radius: ptr(7.5);
+    font-family: $font-family-kr;
+    font-weight: 700;
+    color: $gray_80;
+    cursor: pointer;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  input[type='radio']:checked + label {
+    color: $white;
+    background-color: $primary;
+    border: ptr(1) solid $primary;
+  }
+
+  label:hover {
+    border: ptr(1) solid $primary;
+    color: $primary;
+  }
+}

@@ -43,3 +43,17 @@
   @include flex(center, center);
   gap: 0.5rem;
 }
+
+.cart_order_form {
+  width: 100%;
+  @include flex(center, start, column);
+  gap: ptr(25);
+  div {
+    width: 100%;
+  }
+}
+
+.cart_order_form_payment_list {
+  @include flex(start, center);
+  gap: ptr(7);
+}

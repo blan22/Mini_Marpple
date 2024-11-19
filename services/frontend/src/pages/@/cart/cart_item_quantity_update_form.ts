@@ -76,12 +76,12 @@ class CartItemQuantityUpdateForm extends Form<CartCardData> {
 
   override submit(data: CartProductQuantityUpdate) {
     updateCartQuantity(this.data.cart_product_item_id, data)
-      .then(() => {
+      .then(() =>
         this.dispatchEvent(ModalCancelEvent, {
           bubbles: true,
           detail: { ...data, cartProductItemId: this.data.cart_product_item_id },
-        });
-      })
+        }),
+      )
       .catch((error: HttpError) => toast.show(error.message, { variant: 'error' }));
   }
 }

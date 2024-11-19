@@ -4,3 +4,5 @@ export * from './member';
 export type * from './member';
 export * from './cart';
 export type * from './cart';
+export * from './payment';
+export type * from './payment';

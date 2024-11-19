@@ -13,6 +13,7 @@ import '../../components/atom/image/image.module.scss';
 import '../../components/atom/divider/divider.module.scss';
 import '../../components/atom/typography/typography.module.scss';
 import '../../components/atom/range/range.module.scss';
+import '../../components/atom/radio/radio.module.scss';
 import '../../components/atom/select/select.module.scss';
 // unit
 import '../../components/unit/layout/layout.module.scss';

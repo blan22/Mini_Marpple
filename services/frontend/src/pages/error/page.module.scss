@@ -1,6 +1,6 @@
 .container {
   height: 100%;
-  @include flex(center, center);
+  @include flex(center, center, column);
   gap: ptr(10);
 
   a {

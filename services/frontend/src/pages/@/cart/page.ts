@@ -1,4 +1,6 @@
 import { html, on, Page } from 'rune-ts';
+import { each, filter, pipe } from '@fxts/core';
+import { v4 } from 'uuid';
 import klass from './page.module.scss';
 import {
   Layout,
@@ -15,8 +17,8 @@ import {
 } from '../../../components';
 import { deleteCartProduct, getCart } from '../../../lib/api';
 import { CartItemQuantityUpdateForm } from './cart_item_quantity_update_form';
-import { each, filter, pipe } from '@fxts/core';
 import type { HttpError } from '../../../lib/httpError';
+import { CartOrderForm } from './cart_order_form';
 
 export interface CardPageData {
   cart: Awaited<ReturnType<typeof getCart>>['data'];
@@ -74,7 +76,7 @@ export class CartPage extends Page<CardPageData> {
                       ${new Typography({ text: '3,000원' }, { size: 'SIZE_12', weight: 'BOLD', as: 'span' })}
                     </li>
                   </ul>
-                  ${new Divider({ style: 'DOTTED' })} ${new Button({ text: '주문서 작성' })}
+                  ${new Divider({ style: 'DOTTED' })} ${new CartOrderForm()}
                 </section>
                 ${this._modalView}
               </div>
@@ -141,3 +143,7 @@ export class CartPage extends Page<CardPageData> {
     this._totalPriceView.element().textContent = `${totalPrice.toLocaleString('ko-kr')}원`;
   }
 }
+
+// 1. 주문하기 버튼을 누를 때, 주문 상태 테이블을 생성/갱신한다 상태는 pending
+// 2. pg 결제창에서 결제가 완료되었다면 웹훅 수신 대기
+// 3. 서버 웹훅 라우트에서 수신이 왔다면 검증 처리

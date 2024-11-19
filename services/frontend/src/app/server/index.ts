@@ -1,6 +1,6 @@
 import { app } from '@rune-ts/server';
 import { ClientRouter } from '../router';
-import { ensureAuthenticatedMiddleware } from '../../lib/middleware';
+import { ensureAuthenticatedMiddleware, errorBoundaryMiddleware } from '../../lib/middleware';
 import { cartHandler, orderHandler } from '../../pages/@/route';
 import { adminProductCreateHanlder, adminProductHanlder, adminProductUpdateHandler } from '../../pages/admin/route';
 import { productDetailHanlder, productHanlder } from '../../pages/products/route';
@@ -10,13 +10,16 @@ import { notFoundHandler } from '../../pages/error/route';
 
 const server = app();
 
-server.get(ClientRouter['/'].toString(), homeHandler(ClientRouter['/']));
+server.get(ClientRouter['/'].toString(), errorBoundaryMiddleware(homeHandler(ClientRouter['/'])));
 
-server.get(ClientRouter['/product'].toString(), productHanlder(ClientRouter['/product']));
+server.get(ClientRouter['/product'].toString(), errorBoundaryMiddleware(productHanlder(ClientRouter['/product'])));
 
-server.get(ClientRouter['/product/:id'].toString(), productDetailHanlder(ClientRouter['/product/:id']));
+server.get(
+  ClientRouter['/product/:id'].toString(),
+  errorBoundaryMiddleware(productDetailHanlder(ClientRouter['/product/:id'])),
+);
 
-server.get(ClientRouter['/admin'].toString(), adminProductHanlder(ClientRouter['/admin']));
+server.get(ClientRouter['/admin'].toString(), errorBoundaryMiddleware(adminProductHanlder(ClientRouter['/admin'])));
 
 server.get(
   ClientRouter['/admin/create'].toString(),
@@ -27,16 +30,21 @@ server.get(
 server.get(
   ClientRouter['/admin/:id'].toString(),
   ensureAuthenticatedMiddleware,
-  adminProductUpdateHandler(ClientRouter['/admin/:id']),
+  errorBoundaryMiddleware(adminProductUpdateHandler(ClientRouter['/admin/:id'])),
 );
 
-server.get(ClientRouter['/@/cart'].toString(), ensureAuthenticatedMiddleware, cartHandler(ClientRouter['/@/cart']));
+server.get(
+  ClientRouter['/@/cart'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(cartHandler(ClientRouter['/@/cart'])),
+);
 
-server.get(ClientRouter['/@/order'].toString(), ensureAuthenticatedMiddleware, orderHandler(ClientRouter['/@/order']));
+server.get(
+  ClientRouter['/@/order'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(orderHandler(ClientRouter['/@/order'])),
+);
 
 server.get(ClientRouter['/login'].toString(), loginHandler(ClientRouter['/login']));
 
-// @ts-ignore
-server.get(notFoundHandler(ClientRouter['/404']));
-
-server.use((error, req, res, next) => {});
+server.use(notFoundHandler(ClientRouter['/404']));
