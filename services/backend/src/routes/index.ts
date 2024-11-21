@@ -2,7 +2,7 @@ import express from 'express';
 import product from './product';
 import member from './member';
 import cart from './cart';
-import payment from './payment';
+import order from './order';
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ router.use('/member', member);
 
 router.use('/cart', cart);
 
-router.use('/payment', payment);
+router.use('/order', order);
 
 export default router;

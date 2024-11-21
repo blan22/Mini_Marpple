@@ -60,12 +60,12 @@ CREATE TABLE cart_product (
 -- Orders Table
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     user_id INT NOT NULL,
     total_price NUMERIC(10,2) NOT NULL,
     status VARCHAR(50) DEFAULT 'PENDING',
-    payment_id VARCHAR(255),
-    imp_uid VARCHAR(255),
-    merchant_uid VARCHAR(255),
+    payment_id VARCHAR(255) NOT NULL,
+    payment_method VARCHAR(255),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -77,30 +77,29 @@ CREATE TABLE order_product (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
-    price_at_purchase NUMERIC(10,2) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
--- Payments Table
-CREATE TABLE payments (
-    id SERIAL PRIMARY KEY,
-    order_id INT NOT NULL,
-    payment_method VARCHAR(50) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    amount NUMERIC(10,2) NOT NULL,
-    imp_uid VARCHAR(255),
-    merchant_uid VARCHAR(255),
-    pg_provider VARCHAR(50),
-    pg_tid VARCHAR(255),
-    paid_at TIMESTAMPTZ NULL,
-    cancelled_at TIMESTAMPTZ NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-);
+-- -- Payments Table
+-- CREATE TABLE payments (
+--     id SERIAL PRIMARY KEY,
+--     order_id INT NOT NULL,
+--     payment_method VARCHAR(50) NOT NULL,
+--     status VARCHAR(50) NOT NULL,
+--     amount NUMERIC(10,2) NOT NULL,
+--     imp_uid VARCHAR(255),
+--     merchant_uid VARCHAR(255),
+--     pg_provider VARCHAR(50),
+--     pg_tid VARCHAR(255),
+--     paid_at TIMESTAMPTZ NULL,
+--     cancelled_at TIMESTAMPTZ NULL,
+--     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+-- );
 
 -- Categories intializing
 INSERT INTO categories (name) VALUES

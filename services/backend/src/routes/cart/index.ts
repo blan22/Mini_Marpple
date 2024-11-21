@@ -12,6 +12,6 @@ router
   .route('/:id')
   .all(ensureAuthMiddleware)
   .patch(zodMiddleware(shared.CartProductQuantityUpdateSchema), cartController.updateCartProduct)
-  .delete(cartController.deleteCartProduct);
+  .delete(cartController.deleteCartProductById);
 
 export default router;

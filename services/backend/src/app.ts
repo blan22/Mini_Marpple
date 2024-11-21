@@ -19,11 +19,12 @@ app.use(
     store,
     secret: CONFIG.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       secure: false,
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
+      sameSite: 'lax',
     },
   }),
 );

@@ -3,7 +3,7 @@ import { AdminProductCreatePage } from './create/page';
 import { AdminProductUpdatePage } from './update/page';
 import type { RenderHandlerType } from '../../types/common';
 import { convertURLtoFile, createMetaData, getCategoryNameById, takeOne } from '../../lib/utils';
-import { getProductById, getProductsByQuery } from '../../lib/api';
+import { getProductByIdSS, getProductsByQuerySS } from '../../lib/api';
 import { type Product } from '@monorepo/shared';
 import { MetaView } from '@rune-ts/server';
 
@@ -15,7 +15,7 @@ export const adminRouter = {
 
 export const adminProductHanlder: RenderHandlerType<typeof AdminPage> = (factory) => {
   return async (_, res) => {
-    const result = await getProductsByQuery();
+    const result = await getProductsByQuerySS();
     const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data?.map(
       (product) => ({
         ...product,
@@ -41,8 +41,7 @@ export const adminProductCreateHanlder: RenderHandlerType<typeof AdminProductCre
 
 export const adminProductUpdateHandler: RenderHandlerType<typeof AdminProductUpdatePage> = (factory) => {
   return async (req, res) => {
-    const result = await getProductById(parseInt(req.params.id!));
-    const product: Product = takeOne(result.data);
+    const product = await getProductByIdSS(parseInt(req.params.id!)).then((result): Product => result.data);
     const thumbnail = await convertURLtoFile(product.thumbnail);
 
     res.send(

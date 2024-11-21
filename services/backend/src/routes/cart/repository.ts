@@ -72,8 +72,10 @@ const update = (cart_product_id: number, quantity: number) => {
   `;
 };
 
-const remove = (cart_product_id: number) => {
-  return POOL.QUERY`
+const remove = (cart_product_id: number, transaction?: any) => {
+  const wPOOL = transaction || POOL;
+
+  return wPOOL.QUERY`
       DELETE FROM cart_product
       WHERE id = ${cart_product_id}
     `;

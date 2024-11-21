@@ -1,12 +1,13 @@
+import shared, { type Product } from '@monorepo/shared';
 import POOL from '../../shared/db';
 import { CreateProduct } from '../../types/product';
 
-const findById = (id: number) => {
+const findById = (id: number): Promise<Product> => {
   return POOL.QUERY`
     SELECT * 
     FROM products
     WHERE id = ${id}
-  `;
+  `.then((result: Product[]) => shared.takeOne(result));
 };
 
 const findByQuery = (offset: number, limit: number) => {
@@ -38,4 +39,24 @@ const update = async (
   `;
 };
 
-export { create, update, findById, findByQuery };
+const increase = (product_id: number, quantity: number, transaction?: any) => {
+  const wPOOL = transaction || POOL;
+
+  return wPOOL.QUERY`
+    UPDATE products
+    SET stock = stock + ${quantity}, updated_at = CURRENT_TIMESTAMP
+    WHERE id = ${product_id}
+  `;
+};
+
+const decrease = (product_id: number, quantity: number, transaction?: any) => {
+  const wPOOL = transaction || POOL;
+
+  return wPOOL.QUERY`
+    UPDATE products
+    SET stock = stock - ${quantity}, updated_at = CURRENT_TIMESTAMP
+    WHERE id = ${product_id}
+  `;
+};
+
+export { create, update, findById, findByQuery, increase, decrease };

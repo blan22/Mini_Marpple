@@ -1,3 +1,5 @@
+import { html, on } from 'rune-ts';
+import { CreateOrderSchema, type CreateOrder } from '@monorepo/shared';
 import {
   Button,
   Checkbox,
@@ -7,20 +9,26 @@ import {
   Radio,
   toast,
   Typography,
+  type CartCardData,
 } from '../../../components';
-import { html, on } from 'rune-ts';
 import klass from './page.module.scss';
-import { OrderSchema, type Order } from '@monorepo/shared';
 import { requestPayment } from '../../../lib/api';
 import { v4 } from 'uuid';
+import { createOrderName, getDeliveryFee, redirect } from '../../../lib/utils';
+import { reduce } from '@fxts/core';
 
-class CartOrderForm extends Form {
+interface CartOrderFormData {
+  cart: CartCardData[];
+  cart_id: number;
+  user_id: number;
+}
+class CartOrderForm extends Form<CartOrderFormData> {
   private _formController: FormController;
 
-  constructor(data = {}) {
+  constructor(data: CartOrderFormData) {
     super({ ...data });
 
-    this._formController = new FormController(this, OrderSchema);
+    this._formController = new FormController(this, CreateOrderSchema);
   }
 
   override template() {
@@ -48,14 +56,29 @@ class CartOrderForm extends Form {
     console.log(e);
   }
 
-  override submit(data: Order) {
-    requestPayment(v4(), data.pay_method)
+  updateCart(cart: CartOrderFormData['cart']) {
+    this.data.cart = cart;
+  }
+
+  override submit(data: CreateOrder) {
+    requestPayment({
+      paymentId: v4(),
+      payMethod: data.pay_method,
+      orderName: createOrderName(this.data.cart),
+      totalAmount: reduce(
+        (total, item) => total + parseInt(item.price) * item.quantity,
+        getDeliveryFee(),
+        this.data.cart,
+      ),
+      userId: this.data.user_id,
+    })
       .then((result) => {
         console.log(result);
+        // @todo: 결제 취소 케이스 처리 -> 삭제?
+        if (result?.code === 'FAILURE_TYPE_PG') {
+        } else redirect(`/@/order/complete?paymentId=${result?.paymentId}`);
       })
-      .catch((error) => {
-        toast.show(error?.messsage ?? '에러가 발생했습니다.', { variant: 'error' });
-      });
+      .catch((error) => toast.show(error?.messsage ?? '에러가 발생했습니다.', { variant: 'error' }));
   }
 }
 

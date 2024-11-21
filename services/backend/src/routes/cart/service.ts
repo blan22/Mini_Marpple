@@ -28,7 +28,7 @@ const updateCartProduct = async (cart_product_id: number, quantity: number) => {
   return await cartRepository.update(cart_product_id, quantity);
 };
 
-const deleteCartProduct = async (user_id: number, cart_product_id: number) => {
+const deleteCartProductById = async (user_id: number, cart_product_id: number) => {
   const cart_product = await cartRepository.findCartProductById(user_id, cart_product_id);
 
   if (!cart_product) new ForbiddenError();
@@ -36,4 +36,12 @@ const deleteCartProduct = async (user_id: number, cart_product_id: number) => {
   return await cartRepository.remove(cart_product_id);
 };
 
-export { addProductToCart, findById, updateCartProduct, deleteCartProduct };
+const deleteCartProductAll = async (user_id: number) => {
+  const cart = await cartRepository.findCartById(user_id);
+
+  for (const cart_product_item of cart.cart_product_items) {
+    await cartRepository.remove(cart_product_item.id);
+  }
+};
+
+export { addProductToCart, findById, updateCartProduct, deleteCartProductById, deleteCartProductAll };

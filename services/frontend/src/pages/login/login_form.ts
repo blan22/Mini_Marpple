@@ -44,7 +44,7 @@ class LoginForm extends Form {
 
   override submit(data) {
     login(data)
-      .then(() => {
+      .then((result) => {
         redirect('/');
       })
       .catch((error: HttpError) => {

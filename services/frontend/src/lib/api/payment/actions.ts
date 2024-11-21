@@ -1,33 +1,52 @@
 import * as PortOne from '@portone/browser-sdk/v2';
-import { PORTONE_CHANNEL_KEY, PORTONE_STORE_ID } from '../../../shared/constants';
+import { type Order } from '@monorepo/shared';
+import { ONBOARDING_BASE_URL, PORTONE_CHANNEL_KEY, PORTONE_STORE_ID } from '../../../shared/constants';
+import { post } from '../../fetcher';
+import type { ServerResponse } from '../../../types/common';
 
-export type Customer = {
-  customerId?: string;
-  fullName?: string;
-  firstName?: string;
-  lastName?: string;
-  phoneNumber?: string;
-  email?: string;
-  // address?: Entity.Address;
-  zipcode?: string;
-  // gender?: Entity.Gender;
-  birthYear?: string;
-  birthMonth?: string;
-  birthDay?: string;
+const prepareOrder = ({
+  cartId,
+  orderName,
+  payMethod,
+  paymentId,
+  totalPrice,
+}: {
+  cartId: number;
+  orderName: string;
+  payMethod: string;
+  paymentId: string;
+  totalPrice: number;
+}): Promise<ServerResponse<Order>> => {
+  return post(
+    '/api/order',
+    {
+      cart_id: cartId,
+      order_name: orderName,
+      payment_method: payMethod,
+      payment_id: paymentId,
+      total_price: totalPrice,
+    },
+    { credentials: 'include' },
+  );
 };
 
-const dummy = {
-  paymentId: '2874d90e-e3db-41cb-8ca4-3e321f4be797',
-  transactionType: 'PAYMENT',
-  txId: '01933e9b-ea4d-2c01-595f-16b06623082f',
-};
-
-const requestPayment = (paymentId: string, payMethod: 'CARD') => {
+const requestPayment = ({
+  paymentId,
+  payMethod,
+  totalAmount,
+  orderName,
+  userId,
+}: {
+  paymentId: string;
+  orderName: string;
+  totalAmount: number;
+  userId: number;
+  payMethod: 'CARD';
+}) => {
   return PortOne.requestPayment({
+    redirectUrl: ONBOARDING_BASE_URL,
     storeId: PORTONE_STORE_ID,
     channelKey: PORTONE_CHANNEL_KEY,
-    orderName: '나이키 와플 트레이너 2 SD',
-    totalAmount: 1000,
     currency: 'CURRENCY_KRW',
     customer: {
       email: 'oponize@naver.com',
@@ -36,9 +55,14 @@ const requestPayment = (paymentId: string, payMethod: 'CARD') => {
       lastName: 'Park',
       firstName: 'Junseo',
     },
+    customData: {
+      userId,
+    },
+    orderName,
+    totalAmount,
     paymentId,
     payMethod,
   });
 };
 
-export { requestPayment };
+export { requestPayment, prepareOrder };

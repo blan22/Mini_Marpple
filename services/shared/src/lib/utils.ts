@@ -1,4 +1,5 @@
 import { CATEGORIES } from '../constants';
+import Decimal from 'decimal.js';
 
 const getCategoryNameById = (category_id: 1 | 2 | 3 | 4) => {
   const hashMap = {
@@ -14,4 +15,11 @@ const takeOne = <T>(iterable: Iterable<T>): T => {
   return iterable[Symbol.iterator]().next().value;
 };
 
-export { getCategoryNameById, takeOne };
+function parseSafeNumeric(numeric: undefined | null | Decimal.Value) {
+  if (numeric === null || numeric === undefined) {
+    return null;
+  }
+  return new Decimal(numeric);
+}
+
+export { getCategoryNameById, takeOne, parseSafeNumeric };

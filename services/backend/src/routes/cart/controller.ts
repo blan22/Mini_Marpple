@@ -18,9 +18,9 @@ const updateCartProduct: RequestHandler<{ id: string }> = async (req, res) => {
   res.status(200).json({ message: '성공적으로 카트에 상품을 담았습니다.', data: result });
 };
 
-const deleteCartProduct: RequestHandler = async (req, res) => {
-  const result = await cartService.deleteCartProduct(req.user!.id, parseInt(req.params.id));
+const deleteCartProductById: RequestHandler = async (req, res) => {
+  const result = await cartService.deleteCartProductById(req.user!.id, parseInt(req.params.id));
   res.status(200).json({ message: '성공적으로 카트에 담긴 상품을 제거했습니다.', data: result });
 };
 
-export { getCart, addProductToCart, updateCartProduct, deleteCartProduct };
+export { getCart, addProductToCart, updateCartProduct, deleteCartProductById };

@@ -1,14 +1,19 @@
 import { app } from '@rune-ts/server';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import { ClientRouter } from '../router';
 import { ensureAuthenticatedMiddleware, errorBoundaryMiddleware } from '../../lib/middleware';
-import { cartHandler, orderHandler } from '../../pages/@/route';
+import { cartHandler, orderCompleteHandler, orderFailedHandler, orderHandler } from '../../pages/@/route';
 import { adminProductCreateHanlder, adminProductHanlder, adminProductUpdateHandler } from '../../pages/admin/route';
 import { productDetailHanlder, productHanlder } from '../../pages/products/route';
 import { homeHandler } from '../../pages/home/route';
 import { loginHandler } from '../../pages/login/route';
 import { notFoundHandler } from '../../pages/error/route';
+import { SERVER_ENDPOINT } from '../../shared/constants';
 
 const server = app();
+
+// @ts-ignore
+server.use('/api', createProxyMiddleware({ target: SERVER_ENDPOINT, changeOrigin: true, secure: false }));
 
 server.get(ClientRouter['/'].toString(), errorBoundaryMiddleware(homeHandler(ClientRouter['/'])));
 
@@ -43,6 +48,18 @@ server.get(
   ClientRouter['/@/order'].toString(),
   ensureAuthenticatedMiddleware,
   errorBoundaryMiddleware(orderHandler(ClientRouter['/@/order'])),
+);
+
+server.get(
+  ClientRouter['/@/order/complete'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(orderCompleteHandler(ClientRouter['/@/order/complete'])),
+);
+
+server.get(
+  ClientRouter['/@/order/failed'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(orderFailedHandler(ClientRouter['/@/order/failed'])),
 );
 
 server.get(ClientRouter['/login'].toString(), loginHandler(ClientRouter['/login']));

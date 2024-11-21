@@ -14,7 +14,6 @@ class FormController<T extends object = {}> extends Enable<T> {
   }
 
   private _validate(formData: FormData) {
-    formData.forEach((d) => console.log(d));
     return this._validator.parseAsync(Object.fromEntries(formData.entries()));
   }
 

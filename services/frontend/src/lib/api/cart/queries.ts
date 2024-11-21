@@ -5,10 +5,9 @@ import type { ServerResponse } from '../../../types/common';
 import { SERVER_ENDPOINT } from '../../../shared/constants';
 
 const getCart = () => {
-  return get<ServerResponse<Cart & { cart_product_items: (CartProduct & { product: Product })[] }>>(
-    `${SERVER_ENDPOINT}/cart`,
-    { credentials: 'include' },
-  );
+  return get<ServerResponse<Cart & { cart_product_items: (CartProduct & { product: Product })[] }>>(`/api/cart`, {
+    credentials: 'include',
+  });
 };
 
 const getCartSS = async (req: Request) => {

@@ -3,7 +3,7 @@ import { type Product } from '@monorepo/shared';
 import { ProductPage } from './page';
 import { ProductDetailPage } from './detail/page';
 import type { RenderHandlerType } from '../../types/common';
-import { getProductById, getProductsByQuery } from '../../lib/api';
+import { getProductByIdSS, getProductsByQuerySS } from '../../lib/api';
 import { convertURLtoFile, createMetaData, getCategoryNameById, takeOne } from '../../lib/utils';
 
 export const productRouter = {
@@ -13,7 +13,7 @@ export const productRouter = {
 
 export const productHanlder: RenderHandlerType<typeof ProductPage> = (factory) => {
   return async (_, res) => {
-    const result = await getProductsByQuery();
+    const result = await getProductsByQuerySS();
     const products: (Product & { href: string })[] = result.data?.map((product) => ({
       ...product,
       category: getCategoryNameById(product.category_id),
@@ -26,8 +26,7 @@ export const productHanlder: RenderHandlerType<typeof ProductPage> = (factory) =
 
 export const productDetailHanlder: RenderHandlerType<typeof ProductDetailPage> = (factory) => {
   return async (req, res) => {
-    const result = await getProductById(parseInt(req.params.id!));
-    const product: Product = takeOne(result.data);
+    const product = await getProductByIdSS(parseInt(req.params.id!)).then((result): Product => result.data);
     const thumbnail = await convertURLtoFile(product.thumbnail);
 
     res.send(

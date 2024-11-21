@@ -2,7 +2,7 @@ import { MetaView } from '@rune-ts/server';
 import { HomePage } from './page';
 import type { RenderHandlerType } from '../../types/common';
 import { createMetaData, getCategoryNameById } from '../../lib/utils';
-import { getProductsByQuery } from '../../lib/api';
+import { getProductsByQuerySS } from '../../lib/api';
 
 export const homeRouter = {
   ['/']: HomePage,
@@ -10,7 +10,7 @@ export const homeRouter = {
 
 export const homeHandler: RenderHandlerType<typeof HomePage> = (factory) => {
   return async (_, res) => {
-    const products = await getProductsByQuery().then((result) =>
+    const products = await getProductsByQuerySS().then((result) =>
       result.data?.map((product) => ({
         ...product,
         category: getCategoryNameById(product.category_id),

@@ -2,6 +2,8 @@ import { html } from 'rune-ts';
 import type { LayoutData } from '@rune-ts/server';
 // @ts-ignore
 import favicon from '../../public/favicon.png';
+import type { CartCardData } from '../components';
+import { ONBOARDING_DELIVERY_FEE_KR } from '../shared/constants';
 
 enum CATEGORIES {
   GOODS = 'goods',
@@ -38,6 +40,18 @@ export const getParamsFromUrl = () => {
   return parseInt(`${segments[segments.length - 1]}`, 10);
 };
 
+export const getSearchQueryFromUrl = () => {
+  if (typeof window === 'undefined') throw new Error('브라우저 환경에서만 사용해주세요.');
+  return Object.fromEntries(new URLSearchParams(location.search));
+};
+
+export const getDeliveryFee = (national: 'kr' = 'kr') => {
+  const delivery_fee = {
+    kr: ONBOARDING_DELIVERY_FEE_KR,
+  };
+  return delivery_fee[national];
+};
+
 export const createMetaData = (data: Partial<LayoutData>): LayoutData => {
   return {
     head: {
@@ -56,6 +70,20 @@ export const createMetaData = (data: Partial<LayoutData>): LayoutData => {
 
 export const takeOne = <T>(iterable: Iterable<T>): T => {
   return iterable[Symbol.iterator]().next().value;
+};
+
+export const truncate = ({ string, limit, suffix }: { string: string; limit: number; suffix: string }) => {
+  if (string.length > limit) return string.substring(0, limit) + suffix;
+
+  return string;
+};
+
+export const createOrderName = (orderProductList: CartCardData[]) => {
+  return orderProductList.length === 0
+    ? ''
+    : orderProductList.length === 1
+      ? `${orderProductList[0]?.name}`
+      : `${orderProductList[0]?.name} 외 ${orderProductList.length - 1}개`;
 };
 
 export const redirect = (url: string) => {
