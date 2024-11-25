@@ -35,21 +35,11 @@ class Button extends View<ButtonData> {
           this.options.disabled ? klass.disabled : '',
         )}"
         type="${this.options.type ? this.options.type : 'button'}"
-        ${this.options.disabled ? 'disabled' : ''}
+        ${this.options.disabled ? 'disabled=true' : ''}
       >
         ${text}
       </button>
     `;
-  }
-
-  disabled() {
-    this.options.disabled = true;
-    this.redraw();
-  }
-
-  enabled() {
-    this.options.disabled = false;
-    this.redraw();
   }
 }
 

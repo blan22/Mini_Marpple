@@ -4,7 +4,7 @@
     width: 100%;
     height: 100%;
     @include flex(center, center, column);
-    border: 1px dotted  $gray_20;
+    border: 1px dotted $gray_20;
     border-radius: ptr(15);
     gap: 0.65rem;
   }
@@ -27,4 +27,10 @@
   border-top: 1px solid $gray_20;
   border-bottom: 1px solid $gray_20;
   padding: 1rem 0;
+}
+
+.order_list {
+  width: 100%;
+  @include flex(center, center, column);
+  gap: 1.25rem;
 }

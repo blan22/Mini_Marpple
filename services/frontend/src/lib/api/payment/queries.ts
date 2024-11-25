@@ -12,4 +12,12 @@ const getOrderByIdSS = (req: Request) => {
   return get(`${SERVER_ENDPOINT}/order`, { headers, credentials: 'include', params: req.query.paymentId });
 };
 
-export { getOrderByIdSS };
+const getOrdersSS = (req: Request) => {
+  const headers = new Headers();
+  headers.set('cookie', `${req.get('cookie')}`);
+  headers.set('Content-Type', 'application/json');
+
+  return get(`${SERVER_ENDPOINT}/order`, { headers, credentials: 'include' });
+};
+
+export { getOrdersSS, getOrderByIdSS };

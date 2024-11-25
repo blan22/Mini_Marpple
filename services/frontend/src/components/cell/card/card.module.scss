@@ -1,4 +1,5 @@
-.product_card {}
+.product_card {
+}
 
 .product_content {
   @include flex(center, start, column);
@@ -40,15 +41,21 @@
   width: 100%;
   @include flex(center, start, column);
   gap: 0.5rem;
+  padding-bottom: ptr(16);
 }
 
 .order_card_content {
   width: 100%;
   @include flex(space-between, center);
-  div[data-rune="ProductCard"] {
+  div[data-rune='ProductCard'] {
     width: 100px;
   }
   button {
     width: 200px;
   }
+}
+
+.order_card_content_detail {
+  @include flex(center, start, column);
+  gap: ptr(14);
 }

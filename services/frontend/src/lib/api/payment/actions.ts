@@ -1,7 +1,7 @@
 import * as PortOne from '@portone/browser-sdk/v2';
-import { type Order } from '@monorepo/shared';
+import { type CancelOrder, type Order } from '@monorepo/shared';
 import { ONBOARDING_BASE_URL, PORTONE_CHANNEL_KEY, PORTONE_STORE_ID } from '../../../shared/constants';
-import { post } from '../../fetcher';
+import { post, remove } from '../../fetcher';
 import type { ServerResponse } from '../../../types/common';
 
 const prepareOrder = ({
@@ -65,4 +65,8 @@ const requestPayment = ({
   });
 };
 
-export { requestPayment, prepareOrder };
+const cancelOrder = (data: CancelOrder) => {
+  return remove('/api/order', data, { credentials: 'include' });
+};
+
+export { requestPayment, prepareOrder, cancelOrder };

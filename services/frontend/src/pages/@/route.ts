@@ -3,7 +3,7 @@ import { OrderPage } from './orders/page';
 import type { RenderHandlerType } from '../../types/common';
 import { MetaView } from '@rune-ts/server';
 import { createMetaData } from '../../lib/utils';
-import { getCartSS, getOrderByIdSS } from '../../lib/api';
+import { getCartSS, getOrderByIdSS, getOrdersSS } from '../../lib/api';
 import { OrderCompletePage } from './orders/complete/page';
 import { OrderFailedPage } from './orders/failed/page';
 
@@ -23,8 +23,10 @@ export const cartHandler: RenderHandlerType<typeof CartPage> = (factory) => {
 };
 
 export const orderHandler: RenderHandlerType<typeof OrderPage> = (factory) => {
-  return async (_, res) => {
-    res.send(new MetaView(factory({}), createMetaData({ head: { title: 'ORDER' } })).toHtml());
+  return async (req, res) => {
+    const result = await getOrdersSS(req);
+
+    res.send(new MetaView(factory({ orders: result.data }), createMetaData({ head: { title: 'ORDER' } })).toHtml());
   };
 };
 

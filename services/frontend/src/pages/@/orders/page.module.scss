@@ -12,8 +12,23 @@
   }
 }
 
-.order_list {
+.order_cancel_form {
+  width: ptr(500);
+  @include flex(center, start, column);
+  gap: ptr(16);
+}
+
+.order_cancel_form_title {
+  @include flex(center, start, column);
   width: 100%;
-  @include flex(center, center, column);
-  gap: 1.25rem;
+}
+
+.order_cancel_form_select {
+  width: 100%;
+}
+
+.order_cancel_form_buttons {
+  width: 100%;
+  @include flex(center, center);
+  gap: ptr(7);
 }

@@ -1,4 +1,4 @@
-import shared, { type RequestOrder, type OrderProduct, type Order } from '@monorepo/shared';
+import shared, { type RequestOrder, type OrderProduct, type Order, Product } from '@monorepo/shared';
 import POOL from '../../shared/db';
 
 const findById = (payment_id: string): Promise<Order> => {
@@ -7,6 +7,35 @@ const findById = (payment_id: string): Promise<Order> => {
     FROM orders
     WHERE payment_id = ${payment_id}
   `.then((result: Order[]) => shared.takeOne(result));
+};
+
+const findByAll = (user_id: number) => {
+  return POOL.ASSOCIATE`
+    orders ${POOL.SQL`WHERE user_id = ${user_id} ORDER BY created_at DESC`}
+      < order_product
+        - product
+  `.then(
+    (
+      orders: (Order & {
+        _: {
+          order_product: (OrderProduct & {
+            _: {
+              product: Product;
+            };
+          })[];
+        };
+      })[],
+    ) =>
+      orders.map((order) => ({
+        ...order,
+        _: null,
+        order_products: order._.order_product.map((order_product) => ({
+          ...order_product,
+          _: null,
+          product: order_product._.product,
+        })),
+      })),
+  );
 };
 
 const findOrderProductById = (order_id: number): Promise<OrderProduct[]> => {
@@ -61,4 +90,4 @@ const remove = async (transaction: any) => {
   await wPOOL.QUERY`DELETE FROM orders`;
 };
 
-export { findById, findOrderProductById, create, createOrderProduct, update, remove };
+export { findById, findByAll, findOrderProductById, create, createOrderProduct, update, remove };

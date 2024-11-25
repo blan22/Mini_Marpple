@@ -151,9 +151,3 @@ export class CartPage extends Page<CardPageData> {
     this._totalPriceView.element().textContent = `${totalPrice.toLocaleString('ko-kr')}원`;
   }
 }
-
-// 1. 주문하기 버튼을 누를 때, 주문 상태 테이블을 생성/갱신한다 상태는 pending
-// 2. pg 결제창에서 결제가 완료되었다면 웹훅 수신 대기
-// 3. 서버 웹훅 라우트에서 수신이 왔다면 검증 처리
-
-// delete 할 때도 뷰 업데이트 필요

@@ -6,6 +6,7 @@ import '../../components/cell/card/card.module.scss';
 import '../../components/cell/modal/modal.module.scss';
 import '../../components/cell/thumbnail/thumbnail.module.scss';
 import '../../components/cell/uploader/image.module.scss';
+import '../../components/cell/pagination/pagination.module.scss';
 // atom
 import '../../components/atom/button/button.module.scss';
 import '../../components/atom/input/input.module.scss';
@@ -21,6 +22,8 @@ import '../../components/unit/header/header.module.scss';
 // page
 import '../../pages/@/cart/page.module.scss';
 import '../../pages/@/orders/page.module.scss';
+import '../../pages/@/orders/complete/page.module.scss';
+import '../../pages/@/orders/failed/page.module.scss';
 import '../../pages/login/page.module.scss';
 import '../../pages/home/page.module.scss';
 import '../../pages/admin/page.module.scss';

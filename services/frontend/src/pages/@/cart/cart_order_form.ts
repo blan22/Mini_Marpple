@@ -53,7 +53,7 @@ class CartOrderForm extends Form<CartOrderFormData> {
 
   @on(FormValidationErrorEvent)
   onFormValidationError(e: FormValidationErrorEvent) {
-    console.log(e);
+    toast.show(e.detail, { variant: 'error' });
   }
 
   updateCart(cart: CartOrderFormData['cart']) {
@@ -61,6 +61,11 @@ class CartOrderForm extends Form<CartOrderFormData> {
   }
 
   override submit(data: CreateOrder) {
+    if (!this.data.cart.length) {
+      toast.show('상품을 카트에 담아주세요.', { variant: 'error' });
+      return;
+    }
+
     requestPayment({
       paymentId: v4(),
       payMethod: data.pay_method,
@@ -73,7 +78,6 @@ class CartOrderForm extends Form<CartOrderFormData> {
       userId: this.data.user_id,
     })
       .then((result) => {
-        console.log(result);
         // @todo: 결제 취소 케이스 처리 -> 삭제?
         if (result?.code === 'FAILURE_TYPE_PG') {
         } else redirect(`/@/order/complete?paymentId=${result?.paymentId}`);

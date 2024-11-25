@@ -33,6 +33,15 @@ export const getCategoryNameById = (category_id: 1 | 2 | 3 | 4) => {
   return hashMap[category_id];
 };
 
+export const getOrderStatus = (order_status: string) => {
+  const hashMap = {
+    PENDING: '결제 확인 중',
+    SUCCESS: '결제 완료',
+    CANCELED: '취소 완료',
+  };
+  return hashMap[order_status];
+};
+
 export const getParamsFromUrl = () => {
   if (typeof window === 'undefined') throw new Error('브라우저 환경에서만 사용해주세요.');
   // eslint-disable-next-line no-undef

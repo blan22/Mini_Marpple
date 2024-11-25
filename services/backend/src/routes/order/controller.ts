@@ -24,10 +24,16 @@ const findById: RequestHandler<{ id: string }> = async (req, res) => {
   else res.status(200).json({ message: '결제 건을 성공적으로 조회했습니다.', data: order });
 };
 
-const cancel: RequestHandler<{ id: string }> = async (req, res) => {
-  const result = await orderService.cancel(req.params.id);
+const findByAll: RequestHandler<{ id: string }> = async (req, res) => {
+  const result = await orderService.findByAll(req.user!.id);
+
+  res.status(200).json({ message: '구매내역을 성공적으로 조회했습니다.', data: result });
+};
+
+const cancel: RequestHandler = async (req, res) => {
+  const result = await orderService.cancel(req.body);
 
   res.status(200).json({ message: '주문을 취소했습니다.', data: result });
 };
 
-export { webhook, findById, cancel };
+export { webhook, findById, findByAll, cancel };

@@ -7,6 +7,13 @@
   font-family: $font-family-kr;
 }
 
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 50%;
+  background-color: $gray_10;
+  color: $gray_50;
+}
+
 .primary {
   background-color: $primary;
   color: $white;
@@ -20,8 +27,4 @@
 .none {
   all: unset;
   cursor: pointer;
-}
-
-.disabled {
-  cursor: not-allowed;
 }

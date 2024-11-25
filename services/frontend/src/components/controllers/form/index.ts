@@ -23,7 +23,6 @@ class FormController<T extends object = {}> extends Enable<T> {
   }
 
   private _emitValidationError(error: ZodError) {
-    console.log(error);
     this.dispatchEvent(FormValidationErrorEvent, {
       bubbles: true,
       detail: pipe(
