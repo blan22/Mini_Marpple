@@ -7,6 +7,17 @@ const PORTONE_API_SECRET = 'rezYGQMp2yjC52SRyGT8upsIL0g2HpirhCIUgktvweYnbzV8waWN
 const PORTONE_CHANNEL_KEY = 'channel-key-7b3a2825-a7c9-4ea5-9bda-2efad4879bba';
 const PORTONE_STORE_ID = 'store-113c0556-054f-4334-a140-e5ba2aa05281';
 
+const ORDER_STATUS_LOWER_MAP = {
+  ALL: 'all',
+  CANCELED: 'canceled',
+  PENDING: 'pending',
+} as const;
+const ORDER_STATUS_UPPER_MAP = {
+  all: 'ALL',
+  canceled: 'CANCELED',
+  pending: 'PENDING',
+} as const;
+
 export {
   SERVER_ENDPOINT,
   SERVICE_ENV,
@@ -15,4 +26,6 @@ export {
   PORTONE_STORE_ID,
   ONBOARDING_DELIVERY_FEE_KR,
   ONBOARDING_BASE_URL,
+  ORDER_STATUS_LOWER_MAP,
+  ORDER_STATUS_UPPER_MAP,
 };

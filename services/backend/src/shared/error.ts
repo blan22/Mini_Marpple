@@ -1,7 +1,7 @@
 import shared from '@monorepo/shared';
 import { type RequestHandler } from 'express';
 
-const errorBoundary = (controller: RequestHandler<any>): RequestHandler => {
+const errorBoundary = <T>(controller: RequestHandler<any, any, any, T>): RequestHandler<any, any, any, T> => {
   return async (req, res, next) => {
     controller(req, res, next)?.catch((error: OnboardingServerError) => {
       res.status(error.status).json({ message: error.message });

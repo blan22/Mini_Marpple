@@ -26,7 +26,14 @@ export async function http<T extends any>(path: string, config: FetcherRequestIn
 }
 
 export async function get<T extends unknown = any>(path: string, config?: FetcherRequestInit): Promise<T> {
-  const init = { method: 'GET', ...config };
+  const init = {
+    method: 'GET',
+    headers: {
+      'Content-Type': `application/json`,
+      'ngrok-skip-browser-warning': '69420',
+    },
+    ...config,
+  };
   return await http<T>(path, init);
 }
 

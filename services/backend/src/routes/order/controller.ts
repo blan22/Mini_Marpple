@@ -2,6 +2,7 @@ import { type RequestHandler } from 'express';
 import * as orderService from './service';
 import POOL from '../../shared/db';
 import { TransactionalError } from '../../shared/error';
+import { getOrderStatusByQuery, paging } from '../../shared/utils';
 
 const webhook: RequestHandler = async (req, res) => {
   const transaction = await POOL.TRANSACTION();
@@ -24,10 +25,21 @@ const findById: RequestHandler<{ id: string }> = async (req, res) => {
   else res.status(200).json({ message: '결제 건을 성공적으로 조회했습니다.', data: order });
 };
 
-const findByAll: RequestHandler<{ id: string }> = async (req, res) => {
-  const result = await orderService.findByAll(req.user!.id);
+const getOrdersByQuery: RequestHandler<{}, {}, {}, { page: string; limit: string; status: string }> = async (
+  req,
+  res,
+) => {
+  const { page = '1', limit: qLimit = '10', status = 'all' } = req.query;
+  const { offset, limit } = paging(parseInt(page), parseInt(qLimit));
 
-  res.status(200).json({ message: '구매내역을 성공적으로 조회했습니다.', data: result });
+  const orders = await orderService.getOrdersByQuery({
+    offset,
+    limit,
+    user_id: req.user!.id,
+    status: getOrderStatusByQuery(status),
+  });
+
+  res.status(200).json({ message: '구매내역을 성공적으로 조회했습니다.', data: orders });
 };
 
 const cancel: RequestHandler = async (req, res) => {
@@ -36,4 +48,4 @@ const cancel: RequestHandler = async (req, res) => {
   res.status(200).json({ message: '주문을 취소했습니다.', data: result });
 };
 
-export { webhook, findById, findByAll, cancel };
+export { webhook, findById, cancel, getOrdersByQuery };

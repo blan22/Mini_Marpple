@@ -1,9 +1,9 @@
+import { MetaView } from '@rune-ts/server';
 import { CartPage } from './cart/page';
 import { OrderPage } from './orders/page';
 import type { RenderHandlerType } from '../../types/common';
-import { MetaView } from '@rune-ts/server';
-import { createMetaData } from '../../lib/utils';
-import { getCartSS, getOrderByIdSS, getOrdersSS } from '../../lib/api';
+import { createMetaData, getOrderStatusByLower } from '../../lib/utils';
+import { getCartSS, getOrderByIdSS, getOrdersByQuerySS } from '../../lib/api';
 import { OrderCompletePage } from './orders/complete/page';
 import { OrderFailedPage } from './orders/failed/page';
 
@@ -24,9 +24,24 @@ export const cartHandler: RenderHandlerType<typeof CartPage> = (factory) => {
 
 export const orderHandler: RenderHandlerType<typeof OrderPage> = (factory) => {
   return async (req, res) => {
-    const result = await getOrdersSS(req);
+    const { page = '1', status } = req.query;
+    const result = await getOrdersByQuerySS(req, {
+      page: parseInt(page),
+      status: getOrderStatusByLower(status),
+      limit: 10,
+    });
 
-    res.send(new MetaView(factory({ orders: result.data }), createMetaData({ head: { title: 'ORDER' } })).toHtml());
+    res.send(
+      new MetaView(
+        factory({
+          orders: result.data.orders,
+          total: result.data.total,
+          page: parseInt(page),
+          status: getOrderStatusByLower(status),
+        }),
+        createMetaData({ head: { title: 'ORDER' } }),
+      ).toHtml(),
+    );
   };
 };
 

@@ -8,7 +8,7 @@ const router = express.Router();
 router
   .route('/')
   .all(ensureAuthMiddleware)
-  .get(errorBoundary(orderController.findByAll))
+  .get(errorBoundary(orderController.getOrdersByQuery))
   .delete(errorBoundary(orderController.cancel));
 
 router.route('/webhook').post(errorBoundary(orderController.webhook));

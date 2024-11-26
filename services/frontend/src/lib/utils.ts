@@ -3,7 +3,8 @@ import type { LayoutData } from '@rune-ts/server';
 // @ts-ignore
 import favicon from '../../public/favicon.png';
 import type { CartCardData } from '../components';
-import { ONBOARDING_DELIVERY_FEE_KR } from '../shared/constants';
+import { ONBOARDING_DELIVERY_FEE_KR, ORDER_STATUS_LOWER_MAP } from '../shared/constants';
+import { filter, head, pipe } from '@fxts/core';
 
 enum CATEGORIES {
   GOODS = 'goods',
@@ -40,6 +41,14 @@ export const getOrderStatus = (order_status: string) => {
     CANCELED: '취소 완료',
   };
   return hashMap[order_status];
+};
+
+export const getOrderStatusByLower = (order_status: string | undefined) => {
+  return pipe(
+    Object.values(ORDER_STATUS_LOWER_MAP),
+    filter((status) => status === order_status),
+    head,
+  );
 };
 
 export const getParamsFromUrl = () => {

@@ -1,5 +1,6 @@
 import shared, { type RequestOrder, type OrderProduct, type Order, Product } from '@monorepo/shared';
 import POOL from '../../shared/db';
+import { head, pipe } from '@fxts/core';
 
 const findById = (payment_id: string): Promise<Order> => {
   return POOL.QUERY`
@@ -9,9 +10,20 @@ const findById = (payment_id: string): Promise<Order> => {
   `.then((result: Order[]) => shared.takeOne(result));
 };
 
-const findByAll = (user_id: number) => {
+const findByQuery = ({
+  user_id,
+  limit,
+  offset,
+  status,
+}: {
+  user_id: number;
+  limit: number;
+  offset: number;
+  status?: Order['status'];
+}) => {
+  const STATUS = status ? POOL.EQ({ user_id, status }) : POOL.EQ({ user_id });
   return POOL.ASSOCIATE`
-    orders ${POOL.SQL`WHERE user_id = ${user_id} ORDER BY created_at DESC`}
+    orders ${POOL.SQL`WHERE ${STATUS} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`}
       < order_product
         - product
   `.then(
@@ -90,4 +102,14 @@ const remove = async (transaction: any) => {
   await wPOOL.QUERY`DELETE FROM orders`;
 };
 
-export { findById, findByAll, findOrderProductById, create, createOrderProduct, update, remove };
+const count = (user_id: number, status?: Order['status']) => {
+  const STATUS = status ? POOL.EQ({ user_id, status }) : POOL.EQ({ user_id });
+
+  return POOL.QUERY`
+  SELECT COUNT(*) as total
+  FROM orders
+  WHERE ${STATUS}
+`.then((item: { total: string }[]) => pipe(item, head, (item) => parseInt(item?.total ?? '0')));
+};
+
+export { findById, findByQuery, findOrderProductById, create, createOrderProduct, update, remove, count };

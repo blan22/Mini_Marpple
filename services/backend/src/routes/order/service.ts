@@ -138,8 +138,20 @@ const findById = (payment_id: string) => {
   return orderRepository.findById(payment_id);
 };
 
-const findByAll = (user_id: number) => {
-  return orderRepository.findByAll(user_id);
+const getOrdersByQuery = async ({
+  user_id,
+  limit,
+  offset,
+  status,
+}: {
+  user_id: number;
+  limit: number;
+  offset: number;
+  status?: Order['status'];
+}) => {
+  const count = await orderRepository.count(user_id, status);
+  const orders = await orderRepository.findByQuery({ user_id, limit, offset, status });
+  return { orders, total: Math.ceil(count / limit) };
 };
 
 const cancel = (data: { payment_id: string; reason: string }) => {
@@ -151,5 +163,4 @@ const cancel = (data: { payment_id: string; reason: string }) => {
 };
 
 // @todo: 주문 취소 and 주문 실패
-
-export { prepareOrder, webhook, updateOrder, findById, findByAll, cancel };
+export { prepareOrder, webhook, updateOrder, findById, cancel, getOrdersByQuery };
