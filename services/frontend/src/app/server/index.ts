@@ -4,7 +4,7 @@ import { ClientRouter } from '../router';
 import { ensureAuthenticatedMiddleware, errorBoundaryMiddleware } from '../../lib/middleware';
 import { cartHandler, orderCompleteHandler, orderFailedHandler, orderHandler } from '../../pages/@/route';
 import { adminProductCreateHanlder, adminProductHanlder, adminProductUpdateHandler } from '../../pages/admin/route';
-import { productDetailHanlder, productHanlder } from '../../pages/products/route';
+import { productDetailHanlder } from '../../pages/products/route';
 import { homeHandler } from '../../pages/home/route';
 import { loginHandler } from '../../pages/login/route';
 import { notFoundHandler } from '../../pages/error/route';
@@ -17,7 +17,7 @@ server.use('/api', createProxyMiddleware({ target: SERVER_ENDPOINT, changeOrigin
 
 server.get(ClientRouter['/'].toString(), errorBoundaryMiddleware(homeHandler(ClientRouter['/'])));
 
-server.get(ClientRouter['/product'].toString(), errorBoundaryMiddleware(productHanlder(ClientRouter['/product'])));
+server.get(ClientRouter['/product'].toString(), errorBoundaryMiddleware(homeHandler(ClientRouter['/product'])));
 
 server.get(
   ClientRouter['/product/:id'].toString(),

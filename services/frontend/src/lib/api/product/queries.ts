@@ -1,11 +1,24 @@
+import type { Product } from '@monorepo/shared';
 import { get } from '../../fetcher';
-import { SERVER_ENDPOINT } from '../../../shared/constants';
+import { CATEGORY_MAP, SERVER_ENDPOINT } from '../../../shared/constants';
+import type { ServerResponse } from '../../../types/common';
 
-const getProductsByQuery = () => {
+interface GetProductQuery {
+  page: number;
+  limit: number;
+  category?: string;
+}
+
+const getProductsByQuery = (
+  query: GetProductQuery,
+): Promise<ServerResponse<{ products: Product[]; total: number }>> => {
+  const { page, limit, category } = query;
+  console.log(query);
   return get(`/api/product`, {
     query: {
-      page: 1,
-      limit: 10,
+      page,
+      limit,
+      category,
     },
   });
 };
@@ -14,11 +27,15 @@ const getProductById = (productId: number) => {
   return get(`/api/product`, { params: productId });
 };
 
-const getProductsByQuerySS = () => {
+const getProductsByQuerySS = (
+  query: GetProductQuery,
+): Promise<ServerResponse<{ products: Product[]; total: number }>> => {
+  const { page, limit, category } = query;
   return get(`${SERVER_ENDPOINT}/product`, {
     query: {
-      page: 1,
-      limit: 10,
+      page,
+      limit,
+      category,
     },
   });
 };

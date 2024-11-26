@@ -1,8 +1,23 @@
+.product_list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem 1rem;
+  padding-bottom: 2rem;
+}
+
 .admin_product_list {
-  min-height: ptr(200);
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2rem 1rem;
+  padding-bottom: 2rem;
+}
+
+.admin_product_list_create {
   a {
     width: 100%;
-    height: 100%;
+    height: ptr(257.59);
     @include flex(center, center, column);
     border: 1px dotted $gray_20;
     border-radius: ptr(15);
@@ -10,8 +25,8 @@
   }
 
   div {
-    width: 2rem;
-    height: 2rem;
+    width: ptr(32);
+    height: ptr(32);
     background-color: $primary;
     border-radius: 50%;
     @include flex(center, center);

@@ -2,7 +2,7 @@
   width: 100%;
   @include flex(center, center);
   gap: ptr(10);
-  margin-top: ptr(24);
+  padding: ptr(24) 0;
 }
 
 .pagination_page {

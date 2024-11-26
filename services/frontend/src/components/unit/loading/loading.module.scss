@@ -1,0 +1,207 @@
+.loading {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $white;
+  opacity: 0.65;
+  z-index: 9999;
+  @include flex(center, center);
+}
+
+.loading_circle {
+  height: ptr(32);
+  width: ptr(32);
+  -webkit-animation: loading_circle_1 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  animation: loading_circle_1 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: auto;
+    margin: auto;
+    width: ptr(8);
+    height: ptr(8);
+    background: $black;
+    border-radius: 50%;
+    -webkit-animation: loading_circle_2 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+    animation: loading_circle_2 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  }
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: auto;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    width: ptr(8);
+    height: ptr(8);
+    background: $black;
+    border-radius: 50%;
+    -webkit-animation: loading_circle_3 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+    animation: loading_circle_3 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  }
+
+  span {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    height: ptr(32);
+    width: ptr(32);
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: auto;
+      right: 0;
+      margin: auto;
+      width: ptr(8);
+      height: ptr(8);
+      background: $black;
+      border-radius: 50%;
+      -webkit-animation: loading_circle_4 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+      animation: loading_circle_4 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: auto;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      margin: auto;
+      width: ptr(8);
+      height: ptr(8);
+      background: $black;
+      border-radius: 50%;
+      -webkit-animation: loading_circle_5 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+      animation: loading_circle_5 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+    }
+  }
+
+  @-webkit-keyframes loading_circle_1 {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  @keyframes loading_circle_1 {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes loading_circle_2 {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      -webkit-transform: translate3d(24px, 0, 0) scale(0.5);
+    }
+    100% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  @keyframes loading_circle_2 {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(24px, 0, 0) scale(0.5);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @-webkit-keyframes loading_circle_3 {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      -webkit-transform: translate3d(-24px, 0, 0) scale(0.5);
+    }
+    100% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  @keyframes loading_circle_3 {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(-24px, 0, 0) scale(0.5);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @-webkit-keyframes loading_circle_4 {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      -webkit-transform: translate3d(0, 24px, 0) scale(0.5);
+    }
+    100% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  @keyframes loading_circle_4 {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(0, 24px, 0) scale(0.5);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @-webkit-keyframes loading_circle_5 {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      -webkit-transform: translate3d(0, -24px, 0) scale(0.5);
+    }
+    100% {
+      -webkit-transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  @keyframes loading_circle_5 {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(0, -24px, 0) scale(0.5);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+}

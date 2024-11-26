@@ -1,7 +1,8 @@
 import { html, ListView } from 'rune-ts';
 import { OrderCard } from '../../cell';
 import type { Order } from '../../../types/order';
-import klass from './product.module.scss';
+import klass from './list.module.scss';
+import type { getOrdersByQuery } from '../../../lib/api';
 
 class OrderCardList extends ListView<Order, OrderCard> {
   override tagName = 'ul';
@@ -13,6 +14,11 @@ class OrderCardList extends ListView<Order, OrderCard> {
         ${this.itemViews}
       </${this.tagName}>
     `;
+  }
+
+  update(orders: Awaited<ReturnType<typeof getOrdersByQuery>>['data']['orders']) {
+    this.set(orders);
+    this.redraw();
   }
 }
 

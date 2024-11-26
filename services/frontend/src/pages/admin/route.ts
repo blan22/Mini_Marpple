@@ -14,9 +14,10 @@ export const adminRouter = {
 };
 
 export const adminProductHanlder: RenderHandlerType<typeof AdminPage> = (factory) => {
-  return async (_, res) => {
-    const result = await getProductsByQuerySS();
-    const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data?.map(
+  return async (req, res) => {
+    const { page = '1' } = req.query;
+    const result = await getProductsByQuerySS({ page: parseInt(page), limit: 10 });
+    const products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[] = result.data.products.map(
       (product) => ({
         ...product,
         category: getCategoryNameById(product.category_id),

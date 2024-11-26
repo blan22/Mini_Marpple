@@ -1,16 +1,18 @@
 import { type RequestHandler } from 'express';
 import POOL from '../../shared/db';
 import * as productService from './service';
-import { createThumnbnailUrl, paging } from '../../shared/utils';
+import { createThumnbnailUrl, getCategoryIdByQuery, paging } from '../../shared/utils';
 
 const findById: RequestHandler<{ id: string }> = async (req, res) => {
   const result = await productService.findById(parseInt(req.params.id));
   res.json({ messsage: 'success', data: result }).status(200);
 };
 
-const findByQuery: RequestHandler<{}, {}, {}, { page: string; limit: string }> = async (req, res) => {
-  const { limit, offset } = paging(parseInt(req.query?.page), parseInt(req.query?.limit));
-  const result = await productService.findByQuery(offset, limit);
+const findByQuery: RequestHandler<{}, {}, {}, { page: string; limit: string; category: string }> = async (req, res) => {
+  const { page = '1', limit: qLimit = '10', category = undefined } = req.query;
+  const { offset, limit } = paging(parseInt(page), parseInt(qLimit));
+
+  const result = await productService.findByQuery(offset, limit, getCategoryIdByQuery(category));
   res.json({ message: 'success', data: result }).status(200);
 };
 

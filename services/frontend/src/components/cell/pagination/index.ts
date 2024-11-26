@@ -8,7 +8,7 @@ import { PaginationPagePrev } from './pagination_page_prev';
 import { Router } from '../../../lib/csr';
 import { map, pipe, range, toArray } from '@fxts/core';
 
-interface PaginationData {
+export interface PaginationData {
   page: number;
   limit: number;
   length: number;
@@ -32,10 +32,10 @@ class Pagination extends View<PaginationData> {
       Array.from({ length: this.data.length }, (_, i) => ({ title: `${i + 1}`, value: i + 1, page: this.data.page })),
     );
 
-    this._paginationGroupNext = new PaginationGroupNext({});
-    this._paginationGroupPrev = new PaginationGroupPrev({});
-    this._paginationPageNext = new PaginationPageNext({});
-    this._paginationPagePrev = new PaginationPagePrev({});
+    this._paginationGroupNext = new PaginationGroupNext(this.data);
+    this._paginationGroupPrev = new PaginationGroupPrev(this.data);
+    this._paginationPageNext = new PaginationPageNext(this.data);
+    this._paginationPagePrev = new PaginationPagePrev(this.data);
 
     this._updatePageBody();
   }
@@ -48,14 +48,6 @@ class Pagination extends View<PaginationData> {
         <div class="${klass.pagination_next}">${this._paginationPageNext} ${this._paginationGroupNext}</div>
       </div>
     `;
-  }
-
-  protected override onRender(): void {
-    this._update();
-  }
-
-  private get isOffsetEnd() {
-    return Math.ceil(this.data.page / this.data.limit) >= Math.ceil(this.data.length / this.data.limit);
   }
 
   private _updatePageBody() {
@@ -71,23 +63,23 @@ class Pagination extends View<PaginationData> {
   }
 
   private _updateGroupPrev() {
-    if (!this.isOffsetEnd) this._paginationGroupPrev.element().setAttribute('disabled', 'true');
-    else this._paginationGroupPrev.element().removeAttribute('disabled');
+    if (this._paginationGroupPrev.isDisabled(this.data)) this._paginationGroupPrev.disabled();
+    else this._paginationGroupPrev.enabled();
   }
 
   private _updateGroupNext() {
-    if (this.isOffsetEnd) this._paginationGroupNext.element().setAttribute('disabled', 'true');
-    else this._paginationGroupNext.element().removeAttribute('disabled');
+    if (this._paginationGroupNext.isDisabled(this.data)) this._paginationGroupNext.disabled();
+    else this._paginationGroupNext.enabled();
   }
 
   private _updatePageNext() {
-    if (!(this.data.page < this.data.length)) this._paginationPageNext.element().setAttribute('disabled', 'true');
-    else this._paginationPageNext.element().removeAttribute('disabled');
+    if (this._paginationPageNext.isDisabled(this.data)) this._paginationPageNext.disabled();
+    else this._paginationPageNext.enabled();
   }
 
   private _updatePagePrev() {
-    if (!(this.data.page > 1)) this._paginationPagePrev.element().setAttribute('disabled', 'true');
-    else this._paginationPagePrev.element().removeAttribute('disabled');
+    if (this._paginationPagePrev.isDisabled(this.data)) this._paginationPagePrev.disabled();
+    else this._paginationPagePrev.enabled();
   }
 
   @on(PaginationBodyNodeClickEvent)
@@ -135,6 +127,13 @@ class Pagination extends View<PaginationData> {
     Router.push(`${window.location.href}`, {
       page: `${this.data.page}`,
     });
+  }
+
+  update(data: PaginationData) {
+    this.data.length = data.length;
+    this.data.page = data.page;
+    this.data.limit = data.limit;
+    this.redraw();
   }
 }
 

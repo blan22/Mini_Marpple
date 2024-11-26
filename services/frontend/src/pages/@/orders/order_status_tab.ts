@@ -1,25 +1,17 @@
 import { html, ListView, on, View } from 'rune-ts';
-import { Typography } from '../../../components';
-import type { ORDER_STATUS_UPPER_MAP } from '../../../shared/constants';
 import { Router } from '../../../lib/csr';
+import klass from './page.module.scss';
+import { each } from '@fxts/core';
 
 export const ORDER_STATUS_TAB_MAP = {
   canceled: '취소완료',
   all: '전체',
 };
 
-const getOrderStatusTabStyle = (
-  status: OrderStatusTabData['currentStatus'],
-  current: OrderStatusTabData['currentStatus'],
-): Typography['options'] => {
-  if (status === current) return { size: 'SIZE_16', color: 'BLACK', weight: 'BOLD', as: 'span' };
-  return { size: 'SIZE_16', color: 'DIM_30', weight: 'BOLD', as: 'span' };
-};
-
 interface OrderStatusTabData {
   title: string;
-  status: keyof typeof ORDER_STATUS_UPPER_MAP;
-  currentStatus?: keyof typeof ORDER_STATUS_UPPER_MAP;
+  status: string;
+  query?: string;
 }
 
 class OrderStatusTabs extends ListView<OrderStatusTabData, OrderStatusTab> {
@@ -33,13 +25,17 @@ class OrderStatusTabs extends ListView<OrderStatusTabData, OrderStatusTab> {
       </${this.tagName}>
     `;
   }
+
+  update(status: string | undefined) {
+    each((itemView) => itemView.update(status), this.itemViews);
+  }
 }
 
 class OrderStatusTab extends View<OrderStatusTabData> {
   protected override template() {
     return html`
-      <button>
-        ${new Typography({ text: this.data.title }, getOrderStatusTabStyle(this.data.status, this.data.currentStatus))}
+      <button class="${this.data.status === this.data.query ? klass.order_status_tab_disabled : ''}">
+        <h3>${this.data.title}</h3>
       </button>
     `;
   }
@@ -47,6 +43,19 @@ class OrderStatusTab extends View<OrderStatusTabData> {
   @on('click')
   private _click() {
     Router.push(`${window.location.origin}/@/order`, { status: this.data.status });
+  }
+
+  update(status: string | undefined) {
+    if (this.data.status === status) this.disabled();
+    else this.enabled();
+  }
+
+  enabled() {
+    this.element().classList.remove(klass.order_status_tab_disabled);
+  }
+
+  disabled() {
+    this.element().classList.add(klass.order_status_tab_disabled);
   }
 }
 

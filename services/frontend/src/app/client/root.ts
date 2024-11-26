@@ -1,12 +1,13 @@
 import '../../shared/styles/reset.scss';
 // organism
-import '../../components/organism/list/product.module.scss';
+import '../../components/organism/list/list.module.scss';
 // cell
 import '../../components/cell/card/card.module.scss';
 import '../../components/cell/modal/modal.module.scss';
 import '../../components/cell/thumbnail/thumbnail.module.scss';
 import '../../components/cell/uploader/image.module.scss';
 import '../../components/cell/pagination/pagination.module.scss';
+import '../../components/cell/category/category.module.scss';
 // atom
 import '../../components/atom/button/button.module.scss';
 import '../../components/atom/input/input.module.scss';

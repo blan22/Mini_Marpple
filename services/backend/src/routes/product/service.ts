@@ -1,9 +1,13 @@
 import * as productRepository from './repository';
 import * as categoryRepository from '../category/repository';
 import type { CreateProduct } from '../../types/product';
+import { getCategoryIdByQuery } from '../../shared/utils';
 
-const findByQuery = (offset: number, limit: number) => {
-  return productRepository.findByQuery(offset, limit);
+const findByQuery = async (offset: number, limit: number, category_id: ReturnType<typeof getCategoryIdByQuery>) => {
+  const products = await productRepository.findByQuery(offset, limit, category_id);
+  const count = await productRepository.count(category_id);
+
+  return { products, total: Math.ceil(count / limit) };
 };
 
 const findById = (id: number) => {

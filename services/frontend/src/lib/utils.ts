@@ -3,8 +3,8 @@ import type { LayoutData } from '@rune-ts/server';
 // @ts-ignore
 import favicon from '../../public/favicon.png';
 import type { CartCardData } from '../components';
-import { ONBOARDING_DELIVERY_FEE_KR, ORDER_STATUS_LOWER_MAP } from '../shared/constants';
-import { filter, head, pipe } from '@fxts/core';
+import { CATEGORY_MAP, ONBOARDING_DELIVERY_FEE_KR, ORDER_STATUS_LOWER_MAP } from '../shared/constants';
+import { filter, head, map, pipe } from '@fxts/core';
 
 enum CATEGORIES {
   GOODS = 'goods',
@@ -48,6 +48,17 @@ export const getOrderStatusByLower = (order_status: string | undefined) => {
     Object.values(ORDER_STATUS_LOWER_MAP),
     filter((status) => status === order_status),
     head,
+  );
+};
+
+export const getCategoryByLower = (category: string | undefined) => {
+  return (
+    pipe(
+      Object.keys(CATEGORY_MAP),
+      filter((key) => key === category),
+      map((key) => CATEGORY_MAP[key]),
+      head,
+    ) ?? CATEGORY_MAP['all']
   );
 };
 

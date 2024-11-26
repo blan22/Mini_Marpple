@@ -17,6 +17,13 @@ const ORDER_STATUS_UPPER_MAP = {
   canceled: 'CANCELED',
   pending: 'PENDING',
 } as const;
+const CATEGORY_MAP = {
+  all: '전체',
+  cloth: '옷',
+  goods: '굿즈',
+  food: '음식',
+  book: '책',
+} as const;
 
 export {
   SERVER_ENDPOINT,
@@ -28,4 +35,5 @@ export {
   ONBOARDING_BASE_URL,
   ORDER_STATUS_LOWER_MAP,
   ORDER_STATUS_UPPER_MAP,
+  CATEGORY_MAP,
 };

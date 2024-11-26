@@ -1,6 +1,6 @@
 import { html, ListView } from 'rune-ts';
 import { CartCard, type CartCardData } from '../../cell';
-import klass from './product.module.scss';
+import klass from './list.module.scss';
 
 class CartCardList extends ListView<CartCardData, CartCard> {
   override tagName = 'ul';

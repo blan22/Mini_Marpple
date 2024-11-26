@@ -1,6 +1,6 @@
 import { html, on } from 'rune-ts';
 import klass from './page.module.scss';
-import { Layout, Header, OrderCardList, Modal, CancelOrderEvent, ModalCancelEvent, toast } from '../../../components';
+import { Layout, Header, OrderCardList, Modal, CancelOrderEvent, ModalCancelEvent, Loading } from '../../../components';
 import type { Orders } from '../../../types/order';
 import { OrderCancelForm } from './order_cancel_form';
 import { find, pipe } from '@fxts/core';
@@ -22,32 +22,34 @@ export class OrderPage extends PageWithCSR<OrderPageData> {
   private _orderStatusTabsView: OrderStatusTabs;
   private _orderCardList: OrderCardList;
   private _modalView: Modal;
+  private _paginationView: Pagination;
 
   constructor(data: OrderPageData) {
     super({ ...data });
 
     this._orderStatusTabsView = new OrderStatusTabs([
-      { title: '전체', status: 'all', currentStatus: this.data.status ?? ORDER_STATUS_LOWER_MAP.ALL },
-      { title: '취소완료', status: 'canceled', currentStatus: this.data.status ?? ORDER_STATUS_LOWER_MAP.ALL },
+      { title: '전체', status: 'all', query: this.data.status ?? ORDER_STATUS_LOWER_MAP.ALL },
+      { title: '취소완료', status: 'canceled', query: this.data.status ?? ORDER_STATUS_LOWER_MAP.ALL },
     ]);
     this._orderCardList = new OrderCardList(this.data.orders);
+    this._paginationView = new Pagination({ limit: 10, length: this.data.total, page: this.data.page });
     this._modalView = new Modal();
   }
 
   override template() {
     return html`
-      <div>
+      <div class="${klass.page}">
         ${new Layout(
           {
             content: html`
               <div class="${klass.container}">
                 ${this._orderStatusTabsView} ${this._orderCardList} ${this._modalView}
-                ${new Pagination({ limit: 10, length: this.data.total, page: this.data.page })}
               </div>
             `,
           },
           {
             header: new Header({}),
+            footer: this._paginationView,
           },
         )}
       </div>
@@ -71,26 +73,19 @@ export class OrderPage extends PageWithCSR<OrderPageData> {
   }
 
   // @todo: 로딩창
-  protected override onCsrStart(): void {}
-  protected override onCsrEnd(): void {}
+  protected override onCsrStart(): void {
+    Loading.start();
+  }
+  protected override onCsrEnd(): void {
+    Loading.end();
+  }
 
   // @refactor: 탭 컨텐츠 변경 onCsrStart로
   protected override async historyEvent<T>(e: CsrHistoryEvent<T>) {
     const { page = '1', status = ORDER_STATUS_LOWER_MAP.ALL } = e.query;
     const result = await getOrdersByQuery({ page: parseInt(page), status: getOrderStatusByLower(status), limit: 10 });
-    this._update(result.data, status);
-  }
-
-  private _update(data: Awaited<ReturnType<typeof getOrdersByQuery>>['data'], status: string) {
-    this.data.status = getOrderStatusByLower(status);
-    this.data.total = data.total;
-    this.data.orders = data.orders;
-    this._orderStatusTabsView.set([
-      { title: '전체', status: 'all', currentStatus: this.data.status },
-      { title: '취소완료', status: 'canceled', currentStatus: this.data.status },
-    ]);
-    this._orderStatusTabsView.redraw();
-    this._orderCardList.set(this.data.orders);
-    this._orderCardList.redraw();
+    this._orderCardList.update(result.data.orders);
+    this._paginationView.update({ page: parseInt(page), length: result.data.total, limit: 10 });
+    this._orderStatusTabsView.update(getOrderStatusByLower(status));
   }
 }
