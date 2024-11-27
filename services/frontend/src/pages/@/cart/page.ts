@@ -18,6 +18,7 @@ import { deleteCartProduct, getCart } from '../../../lib/api';
 import { CartItemQuantityUpdateForm } from './cart_item_quantity_update_form';
 import type { HttpError } from '../../../lib/httpError';
 import { CartOrderForm } from './cart_order_form';
+import { Empty } from '../../../components/cell/card/empty';
 
 export interface CardPageData {
   cart: Awaited<ReturnType<typeof getCart>>['data'];
@@ -115,7 +116,7 @@ export class CartPage extends Page<CardPageData> {
     deleteCartProduct(e.detail.cartProductItemId)
       .then(() => {
         this._cartCardList.removeBy((item) => item.data.cart_product_item_id === e.detail.cartProductItemId);
-        this._cartCardList.redraw();
+        if (!this._cartCardList.length) this._cartCardList.element().append(new Empty({ text: '카트 상품' }).render());
         this._cartOrderFormView.updateCart(this._cartCardList.data);
         this._updateCartProductTotal();
       })

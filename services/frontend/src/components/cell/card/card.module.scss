@@ -60,3 +60,9 @@
   @include flex(center, start, column);
   gap: ptr(14);
 }
+
+.empty_card {
+  font-size: ptr(24);
+  font-family: $font-family-kr;
+  font-weight: 300;
+}

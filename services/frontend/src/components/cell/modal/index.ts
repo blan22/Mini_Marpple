@@ -34,6 +34,8 @@ class Modal extends View<ModalData> {
   close() {
     this.element().style.display = 'none';
   }
+
+  static open(view: View) {}
 }
 
 export { Modal };

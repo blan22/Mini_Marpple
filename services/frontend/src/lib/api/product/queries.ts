@@ -1,6 +1,6 @@
 import type { Product } from '@monorepo/shared';
 import { get } from '../../fetcher';
-import { CATEGORY_MAP, SERVER_ENDPOINT } from '../../../shared/constants';
+import { SERVER_ENDPOINT } from '../../../shared/constants';
 import type { ServerResponse } from '../../../types/common';
 
 interface GetProductQuery {
@@ -13,7 +13,6 @@ const getProductsByQuery = (
   query: GetProductQuery,
 ): Promise<ServerResponse<{ products: Product[]; total: number }>> => {
   const { page, limit, category } = query;
-  console.log(query);
   return get(`/api/product`, {
     query: {
       page,

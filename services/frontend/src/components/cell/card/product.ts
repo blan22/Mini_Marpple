@@ -2,7 +2,7 @@ import { html, View } from 'rune-ts';
 import { Image, Typography } from '../../atom';
 import klass from './card.module.scss';
 import type { Product } from '@monorepo/shared';
-import { getCategoryNameById } from '../../../lib/utils';
+import { getCategoryByLower, getCategoryNameById } from '../../../lib/utils';
 
 interface ProductCardData extends Omit<Product, 'thumbnail' | 'price'> {
   thumbnail: string;
@@ -30,7 +30,7 @@ class ProductCard extends View<ProductCardData> {
           })}
           <div class="${klass.product_content}">
             ${new Typography(
-              { text: getCategoryNameById(this.data.category_id) },
+              { text: getCategoryByLower(getCategoryNameById(this.data.category_id)) },
               {
                 color: 'BLACK',
                 weight: 'BOLD',

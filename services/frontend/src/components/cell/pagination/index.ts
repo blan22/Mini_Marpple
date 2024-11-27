@@ -24,7 +24,7 @@ class Pagination extends View<PaginationData> {
   constructor(data: PaginationData) {
     super({ ...data });
 
-    this.data.length = data.length;
+    this.data.length = data.length || 1;
     this.data.page = data.page || 1;
     this.data.limit = data.limit || 10;
 
@@ -130,7 +130,7 @@ class Pagination extends View<PaginationData> {
   }
 
   update(data: PaginationData) {
-    this.data.length = data.length;
+    this.data.length = data.length || 1;
     this.data.page = data.page;
     this.data.limit = data.limit;
     this.redraw();

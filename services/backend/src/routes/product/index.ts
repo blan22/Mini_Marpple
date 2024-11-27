@@ -4,12 +4,13 @@ import * as productController from './controller';
 import { uploadMiddleware } from '../../shared/multer';
 import { zodMiddleware } from '../../shared/zod';
 import { ensureAuthMiddleware } from '../../shared/passport';
+import { cacheMiddleware } from '../../shared/redis';
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(productController.findByQuery)
+  .get(cacheMiddleware, productController.findByQuery)
   .post(
     ensureAuthMiddleware,
     uploadMiddleware,
