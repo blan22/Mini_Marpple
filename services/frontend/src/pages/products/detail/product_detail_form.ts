@@ -37,6 +37,13 @@ class ProductDetailForm extends Form<AdminProductPageData> {
             ? new Range({}, { name: 'stock', required: true, min: 1, max: this.data.stock, defaultValue: 1 })
             : new Typography({ text: '품절' })}
         </div>
+        <div class="${klass.sold_out}">
+          ${new Typography({ text: '재고' }, { size: 'SIZE_12', color: 'GRAY_50', weight: 'MEDIUM', as: 'span' })}
+          ${new Typography(
+            { text: `${this.data.stock}` },
+            { size: 'SIZE_12', color: 'GRAY_50', weight: 'MEDIUM', as: 'span' },
+          )}
+        </div>
         ${new Button({ text: '장바구니' }, { type: 'submit', variant: 'primary', disabled: !this.isNotSoldOut })}
       </form>
     `;

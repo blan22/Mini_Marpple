@@ -5,7 +5,7 @@ import type { AdminProductPageData } from '../../../types/product';
 import { ProductDetailForm } from './product_detail_form';
 
 export class ProductDetailPage extends Page<AdminProductPageData> {
-  override template(_) {
+  override template() {
     return html`
       <div>
         ${new Layout(

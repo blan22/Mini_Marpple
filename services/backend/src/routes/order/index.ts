@@ -8,11 +8,12 @@ const router = express.Router();
 router
   .route('/')
   .all(ensureAuthMiddleware)
-  .get(errorBoundary(orderController.getOrdersByQuery))
-  .delete(errorBoundary(orderController.cancel));
+  .get(errorBoundary(orderController.getOrders))
+  .post(errorBoundary(orderController.createOrder))
+  .delete(errorBoundary(orderController.deleteOrder));
 
 router.route('/webhook').post(errorBoundary(orderController.webhook));
 
-router.route('/:id').all(ensureAuthMiddleware).get(errorBoundary(orderController.findById));
+router.route('/:id').all(ensureAuthMiddleware).get(errorBoundary(orderController.getOrder));
 
 export default router;

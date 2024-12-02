@@ -1,17 +1,14 @@
 import shared, { type Order } from '@monorepo/shared';
+import { each, forEach, pipe, toAsync } from '@fxts/core';
 import * as cartRepository from '../cart/repository';
 import * as productRepository from '../product/repository';
 import * as orderRepository from '../order/repository';
 import { NotEnoughStockError, PaymentError, PaymentForgeryError } from '../../shared/error';
 import { portone } from '../../shared/portone';
-import { forEach, pipe, toAsync } from '@fxts/core';
 
-// @todo: 웹훅 서비스 로직 분리
-// @think: 구매/취소인 경우에도 재고 수량 검증이 필요?
 const webhook = async (payment_id: string, transaction: any) => {
   const payment = await portone.payment.getPayment(payment_id);
 
-  // @todo: 포트원에 결제건이 없음, 관련 order, order_product 테이블 초기화
   if (payment === null) {
     throw new PaymentError();
   }
@@ -22,24 +19,8 @@ const webhook = async (payment_id: string, transaction: any) => {
   const order = await orderRepository.findById(id);
 
   switch (status) {
-    case 'READY': {
-      if (order) break;
-
-      await prepareOrder(
-        {
-          payment_id,
-          user_id,
-          order_name,
-          total_price: amount.total,
-        },
-        transaction,
-      );
-
-      break;
-    }
     case 'PAID': {
-      // 상품 테이블 주문 수량 변경
-
+      if (order.status === 'SUCCESS') break;
       if (order.name !== order_name || !shared.parseSafeNumeric(amount.total)?.equals(amount.total))
         throw new PaymentForgeryError();
 
@@ -66,24 +47,29 @@ const webhook = async (payment_id: string, transaction: any) => {
 
       break;
     }
-    case 'FAILED': {
-      // @todo: request cancel portone api
-      break;
-    }
     case 'CANCELLED': {
       // 오더 상태 변경
       await updateOrder(order.id, { status: 'CANCELED' }, transaction);
 
+      if (order.status === 'PENDING') break;
+
       // 상품 테이블 주문 수량 변경
       const order_product_items = await orderRepository.findOrderProductById(order.id);
 
-      pipe(
+      await pipe(
         toAsync(order_product_items),
         forEach((order_product_item) =>
           productRepository.increase(order_product_item.product_id, order_product_item.quantity, transaction),
         ),
       );
 
+      break;
+    }
+    case 'FAILED': {
+      await failed(order.id, transaction);
+      break;
+    }
+    case 'READY': {
       break;
     }
   }
@@ -105,8 +91,9 @@ const prepareOrder = async (
   for (const cart_product_item of cart.cart_product_items) {
     const product = await productRepository.findById(cart_product_item.product_id);
 
-    if (!product || product.stock < cart_product_item.quantity)
+    if (!product || product.stock < cart_product_item.quantity) {
       throw new NotEnoughStockError(`${product.name}의 재고가 부족합니다.`);
+    }
   }
 
   const order = await orderRepository.create(
@@ -120,12 +107,16 @@ const prepareOrder = async (
     transaction,
   );
 
-  for (const cart_product_item of cart.cart_product_items) {
-    await orderRepository.createOrderProduct(
-      { product_id: cart_product_item.product_id, order_id: order.id, quantity: cart_product_item.quantity },
-      transaction,
-    );
-  }
+  await pipe(
+    cart.cart_product_items,
+    toAsync,
+    each((cart_product_item) =>
+      orderRepository.createOrderProduct(
+        { product_id: cart_product_item.product_id, order_id: order.id, quantity: cart_product_item.quantity },
+        transaction,
+      ),
+    ),
+  );
 
   return order;
 };
@@ -134,7 +125,7 @@ const updateOrder = (order_id: number, data: Partial<Order>, transaction: any) =
   return orderRepository.update(order_id, data, transaction);
 };
 
-const findById = (payment_id: string) => {
+const getOrderById = (payment_id: string) => {
   return orderRepository.findById(payment_id);
 };
 
@@ -154,13 +145,20 @@ const getOrdersByQuery = async ({
   return { orders, total: Math.ceil(count / limit) };
 };
 
-const cancel = (data: { payment_id: string; reason: string }) => {
+const cancel = async (data: { payment_id: string; reason: string }, transaction: any) => {
   const { payment_id, reason } = data;
 
-  return portone.payment.cancelPayment({ paymentId: payment_id, reason }).catch((error) => {
-    throw error;
-  });
+  const order = await orderRepository.findById(payment_id);
+
+  if (order.status === 'PENDING') {
+    return updateOrder(order.id, { status: 'CANCELED' }, transaction);
+  }
+
+  return portone.payment.cancelPayment({ paymentId: payment_id, reason });
 };
 
-// @todo: 주문 취소 and 주문 실패
-export { prepareOrder, webhook, updateOrder, findById, cancel, getOrdersByQuery };
+const failed = (order_id: number, transaction: any) => {
+  return orderRepository.remove(order_id, transaction);
+};
+
+export { prepareOrder, webhook, updateOrder, getOrderById, cancel, getOrdersByQuery };

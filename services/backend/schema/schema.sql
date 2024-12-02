@@ -1,193 +1,75 @@
-DROP TABLE IF EXISTS order_product CASCADE;
-DROP TABLE IF EXISTS orders CASCADE;
-DROP TABLE IF EXISTS cart_product CASCADE;
-DROP TABLE IF EXISTS carts CASCADE;
-DROP TABLE IF EXISTS products CASCADE;
-DROP TABLE IF EXISTS categories CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS payments CASCADE;
+Table "users" {
+  "id" SERIAL [pk, increment]
+  "username" VARCHAR(255) [unique, not null]
+  "email" VARCHAR(255) [unique, not null]
+  "password" VARCHAR(255) [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- Users Table
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-);
+Table "categories" {
+  "id" SERIAL [pk, increment]
+  "name" VARCHAR(50) [unique, not null]
+}
 
--- Categories Table
-CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
-);
+Table "products" {
+  "id" SERIAL [pk, increment]
+  "name" VARCHAR(255) [not null]
+  "category_id" INT [not null]
+  "price" NUMERIC(10,2) [not null]
+  "stock" INT [not null]
+  "thumbnail" VARCHAR(255)
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- Products Table
-CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    category_id INT NOT NULL,
-    price NUMERIC(10,2) NOT NULL,
-    stock INT NOT NULL,
-    thumbnail VARCHAR(255),
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
-);
+Table "carts" {
+  "id" SERIAL [pk, increment]
+  "user_id" INT [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- Cart Table
-CREATE TABLE carts (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+Table "cart_product" {
+  "id" SERIAL [pk, increment]
+  "cart_id" INT [not null]
+  "product_id" INT [not null]
+  "quantity" INT [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- Cart_Products Table
-CREATE TABLE cart_product (
-    id SERIAL PRIMARY KEY,
-    cart_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
-);
+Table "orders" {
+  "id" SERIAL [pk, increment]
+  "name" VARCHAR(255) [not null]
+  "user_id" INT [not null]
+  "total_price" NUMERIC(10,2) [not null]
+  "status" VARCHAR(50) [default: 'PENDING']
+  "payment_id" VARCHAR(255) [not null]
+  "payment_method" VARCHAR(255)
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- Orders Table
-CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    user_id INT NOT NULL,
-    total_price NUMERIC(10,2) NOT NULL,
-    status VARCHAR(50) DEFAULT 'PENDING',
-    payment_id VARCHAR(255) NOT NULL,
-    payment_method VARCHAR(255),
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+Table "order_product" {
+  "id" SERIAL [pk, increment]
+  "order_id" INT [not null]
+  "product_id" INT [not null]
+  "quantity" INT [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- Order_Products Table
-CREATE TABLE order_product (
-    id SERIAL PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id)
-);
+Ref:"categories"."id" < "products"."category_id" [delete: set null]
 
--- -- Payments Table
--- CREATE TABLE payments (
---     id SERIAL PRIMARY KEY,
---     order_id INT NOT NULL,
---     payment_method VARCHAR(50) NOT NULL,
---     status VARCHAR(50) NOT NULL,
---     amount NUMERIC(10,2) NOT NULL,
---     imp_uid VARCHAR(255),
---     merchant_uid VARCHAR(255),
---     pg_provider VARCHAR(50),
---     pg_tid VARCHAR(255),
---     paid_at TIMESTAMPTZ NULL,
---     cancelled_at TIMESTAMPTZ NULL,
---     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
---     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
---     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
--- );
+Ref:"users"."id" < "carts"."user_id" [delete: cascade]
 
--- Categories intializing
-INSERT INTO categories (name) VALUES
-('goods'),
-('cloth'),
-('food'),
-('book');
+Ref:"carts"."id" < "cart_product"."cart_id" [delete: cascade]
 
--- User initializing
-INSERT INTO users (username, email, password)
-VALUES
-('blan19', 'oponize@naver.com', '$2b$10$jRlhliqoRrxVLZ2tBTO8me2Z7NaqYJFdNJt2iUWlARlZms8dKsPWy');
+Ref:"products"."id" < "cart_product"."product_id" [delete: cascade]
 
--- Cart initializing
-INSERT INTO carts (user_id, created_at, updated_at)
-SELECT id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
-FROM users;
+Ref:"users"."id" < "orders"."user_id" [delete: cascade]
 
--- -- 사용자 테이블
--- CREATE TABLE users (
---     id SERIAL PRIMARY KEY,
---     username VARCHAR(50) NOT NULL,
---     email VARCHAR(100) NOT NULL UNIQUE,
---     password VARCHAR(255) NOT NULL,
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
---
--- -- 카테고리 테이블
--- CREATE TABLE categories (
---     id SERIAL PRIMARY KEY,
---     name VARCHAR(50) NOT NULL UNIQUE
--- );
---
--- -- 상품 관리 테이블
--- CREATE TABLE products (
---     id SERIAL PRIMARY KEY,
---     name VARCHAR(100) NOT NULL,
---     category_id INT,
---     price DECIMAL(10, 2) NOT NULL,
---     stock INT NOT NULL,
---     thumbnail_url VARCHAR(255),
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     CONSTRAINT fk_category
---         FOREIGN KEY (category_id) REFERENCES categories(id)
---         ON DELETE SET NULL
--- );
---
--- -- 장바구니 테이블
--- CREATE TABLE carts (
---     id SERIAL PRIMARY KEY,
---     user_id INT NOT NULL,
---     product_id INT NOT NULL,
---     quantity INT NOT NULL,
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     CONSTRAINT fk_cart_user
---         FOREIGN KEY (user_id) REFERENCES users(id)
---         ON DELETE CASCADE,
---     CONSTRAINT fk_cart_product
---         FOREIGN KEY (product_id) REFERENCES products(id)
---         ON DELETE CASCADE
--- );
---
--- -- 주문 테이블
--- CREATE TABLE orders (
---     id SERIAL PRIMARY KEY,
---     user_id INT NOT NULL,
---     total_price DECIMAL(10, 2) NOT NULL,
---     status VARCHAR(20) DEFAULT 'pending',
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     CONSTRAINT fk_order_user
---         FOREIGN KEY (user_id) REFERENCES users(id)
---         ON DELETE CASCADE
--- );
---
--- -- 주문 상세 테이블
--- CREATE TABLE order_items (
---     id SERIAL PRIMARY KEY,
---     order_id INT NOT NULL,
---     product_id INT NOT NULL,
---     quantity INT NOT NULL,
---     price DECIMAL(10, 2) NOT NULL,
---     CONSTRAINT fk_order_item_order
---         FOREIGN KEY (order_id) REFERENCES orders(id)
---         ON DELETE CASCADE,
---     CONSTRAINT fk_order_item_product
---         FOREIGN KEY (product_id) REFERENCES products(id)
---         ON DELETE CASCADE
--- );
+Ref:"orders"."id" < "order_product"."order_id" [delete: cascade]
+
+Ref:"products"."id" < "order_product"."product_id"

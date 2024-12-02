@@ -4,7 +4,7 @@ import { type RequestHandler } from 'express';
 const errorBoundary = <T>(controller: RequestHandler<any, any, any, T>): RequestHandler<any, any, any, T> => {
   return async (req, res, next) => {
     controller(req, res, next)?.catch((error: OnboardingServerError) => {
-      res.status(error.status).json({ message: error.message });
+      res.status(error.status || 500).json({ message: error.message });
     });
   };
 };

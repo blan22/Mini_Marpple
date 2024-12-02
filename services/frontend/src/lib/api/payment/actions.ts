@@ -5,13 +5,11 @@ import { post, remove } from '../../fetcher';
 import type { ServerResponse } from '../../../types/common';
 
 const prepareOrder = ({
-  cartId,
   orderName,
   payMethod,
   paymentId,
   totalPrice,
 }: {
-  cartId: number;
   orderName: string;
   payMethod: string;
   paymentId: string;
@@ -20,7 +18,6 @@ const prepareOrder = ({
   return post(
     '/api/order',
     {
-      cart_id: cartId,
       order_name: orderName,
       payment_method: payMethod,
       payment_id: paymentId,

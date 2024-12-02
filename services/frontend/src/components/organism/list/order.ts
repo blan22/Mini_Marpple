@@ -8,7 +8,7 @@ import { Empty } from '../../cell/card/empty';
 class OrderCardList extends ListView<Order, OrderCard> {
   override tagName = 'ul';
   override ItemView = OrderCard;
-  private _emptyView = new Empty();
+  private _emptyView = new Empty({ text: '구매내역' });
 
   override template() {
     return html`

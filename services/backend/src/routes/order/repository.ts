@@ -96,10 +96,13 @@ const update = (order_id: number, data: Partial<Order>, transaction: any) => {
   `;
 };
 
-const remove = async (transaction: any) => {
+const remove = async (order_id: number, transaction: any) => {
   const wPOOL = transaction || POOL;
 
-  await wPOOL.QUERY`DELETE FROM orders`;
+  return wPOOL.QUERY`
+  DELETE FROM orders
+  WHERE id = ${order_id}
+  `;
 };
 
 const count = (user_id: number, status?: Order['status']) => {

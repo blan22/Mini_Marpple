@@ -42,7 +42,7 @@ class OrderStatusTab extends View<OrderStatusTabData> {
 
   @on('click')
   private _click() {
-    Router.push(`${window.location.origin}/@/order`, { status: this.data.status });
+    Router.push(`${window.location.origin}/@/order?status=${this.data.status}`);
   }
 
   update(status: string | undefined) {

@@ -123,7 +123,7 @@ class Pagination extends View<PaginationData> {
     this._updatePagePrev();
     this._updatePageBody();
     this._scrollToTop();
-    // @think: csr을 페이지네이션에서 하는게 아니라 이벤트 전파?
+
     Router.push(`${window.location.href}`, {
       page: `${this.data.page}`,
     });
@@ -133,7 +133,11 @@ class Pagination extends View<PaginationData> {
     this.data.length = data.length || 1;
     this.data.page = data.page;
     this.data.limit = data.limit;
-    this.redraw();
+    this._updateGroupNext();
+    this._updateGroupPrev();
+    this._updatePageNext();
+    this._updatePagePrev();
+    this._updatePageBody();
   }
 }
 

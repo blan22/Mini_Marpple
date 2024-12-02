@@ -1,4 +1,4 @@
-import { createClient, SetOptions } from 'redis';
+import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 import CONFIG from './config';
 import { RequestHandler } from 'express-serve-static-core';

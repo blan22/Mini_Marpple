@@ -1,7 +1,8 @@
 import * as cartRepository from './repository';
 import { ForbiddenError } from '../../shared/error';
+import { each, pipe, toAsync } from '@fxts/core';
 
-const findById = (user_id: number) => {
+const getCart = (user_id: number) => {
   return cartRepository.findCartById(user_id);
 };
 
@@ -24,8 +25,8 @@ const addProductToCart = async (user_id: number, data: { product_id: number; sto
 // 애초에 서버에서 로그인 여부를 파악하고 그에 맞는 카트 결과를 클라이언트에게 넘김
 // 클라이언트는 맞는 카트 데이터를 받고 api 콜을 할 때도 그 카트에 속한 id를 사용해 요청함
 // 서버에서는 그거만 믿고 db 조작을 할 수 없음
-const updateCartProduct = async (cart_product_id: number, quantity: number) => {
-  return await cartRepository.update(cart_product_id, quantity);
+const updateCartProduct = (cart_product_id: number, quantity: number) => {
+  return cartRepository.update(cart_product_id, quantity);
 };
 
 const deleteCartProductById = async (user_id: number, cart_product_id: number) => {
@@ -39,9 +40,11 @@ const deleteCartProductById = async (user_id: number, cart_product_id: number) =
 const deleteCartProductAll = async (user_id: number) => {
   const cart = await cartRepository.findCartById(user_id);
 
-  for (const cart_product_item of cart.cart_product_items) {
-    await cartRepository.remove(cart_product_item.id);
-  }
+  await pipe(
+    cart.cart_product_items,
+    toAsync,
+    each((cart_product_item) => cartRepository.remove(cart_product_item.id)),
+  );
 };
 
-export { addProductToCart, findById, updateCartProduct, deleteCartProductById, deleteCartProductAll };
+export { addProductToCart, getCart, updateCartProduct, deleteCartProductById, deleteCartProductAll };

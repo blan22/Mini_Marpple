@@ -5,16 +5,17 @@ import { Layout, Header, AdminProductCardList } from '../../components';
 
 interface AdminPageData {
   products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[];
+  params?: string;
 }
 
 export class AdminPage extends Page<AdminPageData> {
-  override template(_) {
+  override template() {
     return html`${new Layout(
       {
         content: html`<div class="${klass.container}">${new AdminProductCardList(this.data.products)}</div>`,
       },
       {
-        header: new Header({}),
+        header: new Header({ params: this.data.params }),
       },
     )}`;
   }

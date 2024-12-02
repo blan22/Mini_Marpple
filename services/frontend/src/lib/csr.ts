@@ -59,8 +59,3 @@ class PageWithCSR<T extends object> extends Page<T> {
 }
 
 export { Router, PageWithCSR };
-
-/**
- * @todo: 전역에서 csr 라우터를 관리, 어떻게?
- * push와 같은 history 이벤트가 발생하면 룬에서 어떻게 부분적으로 업데이트를 할 것 인지
- */

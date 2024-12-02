@@ -9,8 +9,9 @@ import { getProductsByQuery } from '../../lib/api';
 interface HomePageData {
   page: number;
   total: number;
-  category?: keyof typeof CATEGORY_MAP;
   products: (Omit<Product, 'thumbnail'> & { href: string; thumbnail: string })[];
+  category?: keyof typeof CATEGORY_MAP;
+  params?: string;
 }
 
 export class HomePage extends PageWithCSR<HomePageData> {
@@ -40,7 +41,7 @@ export class HomePage extends PageWithCSR<HomePageData> {
             content: html` <div class="${klass.container}">${this._categoryView} ${this._productCardListView}</div> `,
           },
           {
-            header: new Header({}),
+            header: new Header({ params: this.data.params }),
             footer: this._paginationView,
           },
         )}
@@ -62,7 +63,7 @@ export class HomePage extends PageWithCSR<HomePageData> {
     const result = await getProductsByQuery({
       category,
       page: parseInt(page),
-      limit: 10,
+      limit: 2,
     });
     this._productCardListView.update(result.data);
     this._categoryView.update(category);

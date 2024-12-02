@@ -24,7 +24,11 @@ server.get(
   errorBoundaryMiddleware(productDetailHanlder(ClientRouter['/product/:id'])),
 );
 
-server.get(ClientRouter['/admin'].toString(), errorBoundaryMiddleware(adminProductHanlder(ClientRouter['/admin'])));
+server.get(
+  ClientRouter['/admin'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(adminProductHanlder(ClientRouter['/admin'])),
+);
 
 server.get(
   ClientRouter['/admin/create'].toString(),

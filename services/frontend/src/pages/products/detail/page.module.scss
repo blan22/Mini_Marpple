@@ -21,3 +21,9 @@
   width: 100%;
   @include flex(space-between, center);
 }
+
+.sold_out {
+  width: 100%;
+  @include flex(end, center);
+  gap: ptr(5);
+}

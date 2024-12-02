@@ -5,6 +5,7 @@ type AdminProductPageData = Omit<Product, 'thumbnail' | 'price'> & {
   thumbnailUrl: string;
   category: string;
   price: string;
+  params?: string;
 };
 
 export type { AdminProductPageData };

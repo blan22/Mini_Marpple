@@ -80,7 +80,6 @@ export class OrderPage extends PageWithCSR<OrderPageData> {
     Loading.end();
   }
 
-  // @refactor: 탭 컨텐츠 변경 onCsrStart로
   protected override async historyEvent<T>(e: CsrHistoryEvent<T>) {
     const { page = '1', status = ORDER_STATUS_LOWER_MAP.ALL } = e.query;
     const result = await getOrdersByQuery({ page: parseInt(page), status: getOrderStatusByLower(status), limit: 10 });

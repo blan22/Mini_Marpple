@@ -12,7 +12,7 @@ export class AdminProductUpdatePage extends Page<AdminProductPageData> {
             content: new AdminProductUpdateForm(this.data),
           },
           {
-            header: new Header({}),
+            header: new Header({ params: this.data.params }),
           },
         )}
       </div>

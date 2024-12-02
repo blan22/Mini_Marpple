@@ -12,7 +12,7 @@ import {
   type CartCardData,
 } from '../../../components';
 import klass from './page.module.scss';
-import { requestPayment } from '../../../lib/api';
+import { prepareOrder, requestPayment } from '../../../lib/api';
 import { v4 } from 'uuid';
 import { createOrderName, getDeliveryFee, redirect } from '../../../lib/utils';
 import { reduce } from '@fxts/core';
@@ -60,29 +60,40 @@ class CartOrderForm extends Form<CartOrderFormData> {
     this.data.cart = cart;
   }
 
-  override submit(data: CreateOrder) {
+  override async submit(data: CreateOrder) {
     if (!this.data.cart.length) {
       toast.show('상품을 카트에 담아주세요.', { variant: 'error' });
       return;
     }
 
-    requestPayment({
-      paymentId: v4(),
+    const paymentId = v4();
+    const orderName = createOrderName(this.data.cart);
+    const totalAmount = reduce(
+      (total, item) => total + parseInt(item.price) * item.quantity,
+      getDeliveryFee(),
+      this.data.cart,
+    );
+
+    await prepareOrder({
+      totalPrice: totalAmount,
       payMethod: data.pay_method,
-      orderName: createOrderName(this.data.cart),
-      totalAmount: reduce(
-        (total, item) => total + parseInt(item.price) * item.quantity,
-        getDeliveryFee(),
-        this.data.cart,
-      ),
-      userId: this.data.user_id,
+      paymentId,
+      orderName,
     })
-      .then((result) => {
-        // @todo: 결제 취소 케이스 처리 -> 삭제?
-        if (result?.code === 'FAILURE_TYPE_PG') {
-        } else redirect(`/@/order/complete?paymentId=${result?.paymentId}`);
-      })
-      .catch((error) => toast.show(error?.messsage ?? '에러가 발생했습니다.', { variant: 'error' }));
+      .then(() =>
+        requestPayment({
+          paymentId,
+          orderName,
+          totalAmount,
+          payMethod: data.pay_method,
+          userId: this.data.user_id,
+        }).then((result) => {
+          // @todo: 결제 취소 케이스 처리 -> 삭제?
+          if (result?.code === 'FAILURE_TYPE_PG') {
+          } else redirect(`/@/order/complete?paymentId=${result?.paymentId}`);
+        }),
+      )
+      .catch((error: Error) => toast.show(error?.message ?? '에러가 발생했습니다.', { variant: 'error' }));
   }
 }
 

@@ -1,7 +1,15 @@
 import { html, View } from 'rune-ts';
 import klass from './header.module.scss';
 
-class Header extends View<{}> {
+interface HeaderData {
+  params?: string;
+}
+
+class Header extends View<HeaderData> {
+  constructor(data: HeaderData = {}) {
+    super({ ...data });
+  }
+
   override template() {
     return html`
       <div class="${klass.header}">
@@ -9,8 +17,12 @@ class Header extends View<{}> {
           <a href="/"><h2>Onboarding</h2></a>
           <nav>
             <ul>
-              <li><a href="/product">상품</a></li>
-              <li><a href="/admin">어드민</a></li>
+              <li>
+                <a href="/product" class="${this.data.params?.includes('product') ? klass.header_active : ''}">상품</a>
+              </li>
+              <li>
+                <a href="/admin" class="${this.data.params?.includes('admin') ? klass.header_active : ''}">어드민</a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -52,6 +64,10 @@ class Header extends View<{}> {
         </div>
       </div>
     `;
+  }
+
+  get isActive() {
+    return this.data.params;
   }
 }
 

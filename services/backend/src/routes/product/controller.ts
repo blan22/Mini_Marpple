@@ -14,7 +14,8 @@ const findByQuery: RequestHandler<{}, {}, {}, { page: string; limit: string; cat
   const { offset, limit } = paging(parseInt(page), parseInt(qLimit));
 
   const result = await productService.findByQuery(offset, limit, getCategoryIdByQuery(category));
-  await writeCache(req.originalUrl, result);
+  await writeCache(req.originalUrl, result, 300);
+
   res.json({ message: 'success', data: result }).status(200);
 };
 
