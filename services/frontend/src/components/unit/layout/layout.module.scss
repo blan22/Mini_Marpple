@@ -1,6 +1,5 @@
 $breakpoint-mobile-max: 550px;
 $breakpoint-pc-min: 1000px;
-$breakpoint-pc-max: 1440px;
 
 @mixin mobile {
   @media (max-width: #{$breakpoint-mobile-max}) {

@@ -48,7 +48,6 @@ class Range extends View<RangeData> {
   _decrease() {
     this.element().querySelector('input')?.stepDown();
     this.dispatchEvent(new Event('change', { bubbles: true }));
-  }
 }
 
 export { Range };

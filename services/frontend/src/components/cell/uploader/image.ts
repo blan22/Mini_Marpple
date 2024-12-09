@@ -22,6 +22,9 @@ class ImageUploader extends View<ImageUploaderData> {
     super({ ...data });
   }
 
+class ImageUploader extends View<{}> {
+  private _thumbnail: File | null = null;
+
   override template() {
     return html`
       <div class="${klass.uploader}">
@@ -63,6 +66,7 @@ class ImageUploader extends View<ImageUploaderData> {
       );
 
       this.dispatchEvent(ChangeImageUploaderFileEvent, { detail: this.data.thumbnail, bubbles: true });
+
       this.redraw();
     }
   }
@@ -77,6 +81,7 @@ class ImageUploader extends View<ImageUploaderData> {
       this.options.defaultValue = null;
 
       this.dispatchEvent(ChangeImageUploaderFileEvent, { detail: this.data.thumbnail, bubbles: true });
+
       this.redraw();
     }
   }
