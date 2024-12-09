@@ -1,0 +1,19 @@
+.category {
+  width: ptr(120);
+  @include flex(center, start, column);
+  gap: ptr(18);
+  background-color: $gray_10;
+  padding: ptr(15) ptr(13);
+  border-radius: ptr(5);
+  font-size: ptr(14);
+  font-family: $font-family-kr;
+  font-weight: 500;
+  color: $dim_60;
+}
+
+.category_disabled {
+  color: $black;
+  span {
+    font-weight: 700;
+  }
+}

@@ -1,136 +1,71 @@
-import { MetaView, app, type LayoutData } from '@rune-ts/server';
-import favicon from '../../../public/favicon.png';
-
+import { app } from '@rune-ts/server';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import { ClientRouter } from '../router';
+import { ensureAuthenticatedMiddleware, errorBoundaryMiddleware } from '../../lib/middleware';
+import { cartHandler, orderCompleteHandler, orderFailedHandler, orderHandler } from '../../pages/@/route';
+import { adminProductCreateHanlder, adminProductHanlder, adminProductUpdateHandler } from '../../pages/admin/route';
+import { productDetailHanlder } from '../../pages/products/route';
+import { homeHandler } from '../../pages/home/route';
+import { loginHandler } from '../../pages/login/route';
+import { notFoundHandler } from '../../pages/error/route';
+import { SERVER_ENDPOINT } from '../../shared/constants';
 
 const server = app();
 
-server.get(ClientRouter['/'].toString(), function (req, res) {
-  const layoutData: LayoutData = {
-    head: {
-      title: 'HOME',
-      description: '',
-      link_tags: [
-        {
-          rel: 'icon',
-          href: favicon,
-          type: 'image/png',
-        },
-      ],
-    },
-  };
-  res.locals.layoutData = layoutData;
-  res.send(new MetaView(ClientRouter['/']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml());
-});
+// @ts-ignore
+server.use('/api', createProxyMiddleware({ target: SERVER_ENDPOINT, changeOrigin: true, secure: false }));
 
-server.get(ClientRouter['/products'].toString(), function (req, res) {
-  const layoutData: LayoutData = {
-    head: {
-      title: 'PRODUCTS',
-      description: '',
-      link_tags: [
-        {
-          rel: 'icon',
-          href: favicon,
-          type: 'image/png',
-        },
-      ],
-    },
-  };
-  res.locals.layoutData = layoutData;
-  res.send(
-    new MetaView(ClientRouter['/products']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
-  );
-});
+server.get(ClientRouter['/'].toString(), errorBoundaryMiddleware(homeHandler(ClientRouter['/'])));
 
-server.get(ClientRouter['/admin'].toString(), function (req, res) {
-  const layoutData: LayoutData = {
-    head: {
-      title: 'ADMIN',
-      description: '',
-      link_tags: [
-        {
-          rel: 'icon',
-          href: favicon,
-          type: 'image/png',
-        },
-      ],
-    },
-  };
-  res.locals.layoutData = layoutData;
-  res.send(
-    new MetaView(ClientRouter['/admin']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
-  );
-});
+server.get(ClientRouter['/product'].toString(), errorBoundaryMiddleware(homeHandler(ClientRouter['/product'])));
 
-server.get(ClientRouter['/admin/create'].toString(), function (req, res) {
-  const layoutData: LayoutData = {
-    head: {
-      title: 'ADMIN PRODUCT CREATE',
-      description: '',
-      link_tags: [
-        {
-          rel: 'icon',
-          href: favicon,
-          type: 'image/png',
-        },
-      ],
-    },
-  };
-  res.locals.layoutData = layoutData;
-  res.send(
-    new MetaView(
-      ClientRouter['/admin/create'](
-        {
-          name: null,
-          thumbnail: null,
-          category: null,
-          price: null,
-          stock: null,
-        },
-        { test: true },
-      ),
-      res.locals.layoutData,
-    ).toHtml(),
-  );
-});
+server.get(
+  ClientRouter['/product/:id'].toString(),
+  errorBoundaryMiddleware(productDetailHanlder(ClientRouter['/product/:id'])),
+);
 
-server.get(ClientRouter['/@/cart'].toString(), function (req, res) {
-  const layoutData: LayoutData = {
-    head: {
-      title: 'CART',
-      description: '',
-      link_tags: [
-        {
-          rel: 'icon',
-          href: favicon,
-          type: 'image/png',
-        },
-      ],
-    },
-  };
-  res.locals.layoutData = layoutData;
-  res.send(
-    new MetaView(ClientRouter['/@/cart']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
-  );
-});
+server.get(
+  ClientRouter['/admin'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(adminProductHanlder(ClientRouter['/admin'])),
+);
 
-server.get(ClientRouter['/@/orders'].toString(), function (req, res) {
-  const layoutData: LayoutData = {
-    head: {
-      title: 'ORDERS',
-      description: '',
-      link_tags: [
-        {
-          rel: 'icon',
-          href: favicon,
-          type: 'image/png',
-        },
-      ],
-    },
-  };
-  res.locals.layoutData = layoutData;
-  res.send(
-    new MetaView(ClientRouter['/@/orders']({ name: '', price: 100 }, { test: true }), res.locals.layoutData).toHtml(),
-  );
-});
+server.get(
+  ClientRouter['/admin/create'].toString(),
+  ensureAuthenticatedMiddleware,
+  adminProductCreateHanlder(ClientRouter['/admin/create']),
+);
+
+server.get(
+  ClientRouter['/admin/:id'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(adminProductUpdateHandler(ClientRouter['/admin/:id'])),
+);
+
+server.get(
+  ClientRouter['/@/cart'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(cartHandler(ClientRouter['/@/cart'])),
+);
+
+server.get(
+  ClientRouter['/@/order'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(orderHandler(ClientRouter['/@/order'])),
+);
+
+server.get(
+  ClientRouter['/@/order/complete'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(orderCompleteHandler(ClientRouter['/@/order/complete'])),
+);
+
+server.get(
+  ClientRouter['/@/order/failed'].toString(),
+  ensureAuthenticatedMiddleware,
+  errorBoundaryMiddleware(orderFailedHandler(ClientRouter['/@/order/failed'])),
+);
+
+server.get(ClientRouter['/login'].toString(), loginHandler(ClientRouter['/login']));
+
+server.use(notFoundHandler(ClientRouter['/404']));

@@ -1,0 +1,16 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $dim_30;
+  @include flex(center, center);
+  display: none;
+}
+
+.modal_content {
+  background-color: $white;
+  padding: ptr(20);
+  border-radius: ptr(7.5);
+}

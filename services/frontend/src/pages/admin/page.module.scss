@@ -12,3 +12,22 @@
   @include flex(space-between, center, column);
   gap: 10px;
 }
+
+.create_product {
+  a {
+    width: 100%;
+    height: 100%;
+    @include flex(center, center, column);
+    border: 1px dotted $gray_20;
+    border-radius: ptr(15);
+    gap: 0.65rem;
+  }
+
+  div {
+    width: 2rem;
+    height: 2rem;
+    background-color: $primary;
+    border-radius: 50%;
+    @include flex(center, center);
+  }
+}

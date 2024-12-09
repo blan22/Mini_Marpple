@@ -1,0 +1,15 @@
+.input {
+  width: 100%;
+  padding: 0.65rem ptr(16);
+  height: ptr(40);
+  color: $black;
+  border-bottom: 1px solid $gray_20;
+  box-sizing: border-box;
+  font-size: ptr(20);
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: $gray_50;
+  }
+}

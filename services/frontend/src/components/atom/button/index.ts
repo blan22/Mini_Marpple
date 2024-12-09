@@ -7,8 +7,10 @@ interface ButtonData {
 }
 
 interface ButtonOptions {
-  variant: 'primary' | 'line';
+  variant: 'primary' | 'line' | 'none';
   disabled?: boolean;
+  type?: 'reset' | 'submit' | 'button';
+  class?: string;
 }
 
 class Button extends View<ButtonData> {
@@ -17,6 +19,7 @@ class Button extends View<ButtonData> {
     public options: ButtonOptions = {
       variant: 'primary',
       disabled: false,
+      type: 'button',
     },
   ) {
     super({ ...data });
@@ -25,22 +28,18 @@ class Button extends View<ButtonData> {
   override template({ text }: ButtonData) {
     return html`
       <button
-        class="${klass.button} ${klasses(klass[this.options.variant], this.options.disabled ? klass.disabled : '')}"
-        ${this.options.disabled ? 'disabled' : ''}
+        class="${klasses(
+          klass.button,
+          this.options.class ?? '',
+          klass[this.options.variant],
+          this.options.disabled ? klass.disabled : '',
+        )}"
+        type="${this.options.type ? this.options.type : 'button'}"
+        ${this.options.disabled ? 'disabled=true' : ''}
       >
         ${text}
       </button>
     `;
-  }
-
-  disabled() {
-    this.options.disabled = true;
-    this.redraw();
-  }
-
-  enabled() {
-    this.options.disabled = false;
-    this.redraw();
   }
 }
 

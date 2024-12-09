@@ -1,20 +1,32 @@
 import { html, View } from 'rune-ts';
 import klass from './header.module.scss';
 
-class Header extends View<{}> {
+interface HeaderData {
+  params?: string;
+}
+
+class Header extends View<HeaderData> {
+  constructor(data: HeaderData = {}) {
+    super({ ...data });
+  }
+
   override template() {
     return html`
       <div class="${klass.header}">
-        <div class="${klass.left}">
+        <div class="${klass.header_left}">
           <a href="/"><h2>Onboarding</h2></a>
           <nav>
             <ul>
-              <li><a href="/products">상품</a></li>
-              <li><a href="/admin">어드민</a></li>
+              <li>
+                <a href="/product" class="${this.data.params?.includes('product') ? klass.header_active : ''}">상품</a>
+              </li>
+              <li>
+                <a href="/admin" class="${this.data.params?.includes('admin') ? klass.header_active : ''}">어드민</a>
+              </li>
             </ul>
           </nav>
         </div>
-        <div class="${klass.right}">
+        <div class="${klass.header_right}">
           <ul>
             <li>
               <a href="/@/cart">
@@ -35,7 +47,7 @@ class Header extends View<{}> {
               </a>
             </li>
             <li>
-              <a href="/@/orders">
+              <a href="/@/order">
                 <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M12 10.5C14.346 10.5 16.2478 8.59721 16.2478 6.25C16.2478 3.90279 14.346 2 12 2C9.65406 2 7.75227 3.90279 7.75227 6.25C7.75227 8.59721 9.65406 10.5 12 10.5Z"
@@ -52,6 +64,10 @@ class Header extends View<{}> {
         </div>
       </div>
     `;
+  }
+
+  get isActive() {
+    return this.data.params;
   }
 }
 

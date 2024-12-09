@@ -1,0 +1,23 @@
+.container {
+  height: 100%;
+  @include flex(center, center);
+}
+
+.order_success {
+  @include flex(center, start, column);
+  gap: ptr(16);
+  div {
+    width: 100%;
+    @include flex(center, start, column);
+  }
+}
+
+.not_access {
+  @include flex(center, center, column);
+  gap: ptr(10);
+  a {
+    font-family: $font-family-kr;
+    color: $dim_60;
+    text-decoration: underline;
+  }
+}

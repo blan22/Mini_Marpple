@@ -15,7 +15,6 @@ export class HttpError<T extends number = number> extends Error {
 
   constructor(opts: { url?: string; method?: string; message?: string; statusCode: T; cause?: Error }) {
     super(opts.message ?? `HTTP Error ${opts.statusCode} `);
-
     Object.setPrototypeOf(this, HttpError.prototype);
     this.name = HttpError.prototype.constructor.name;
 
@@ -30,9 +29,9 @@ export class HttpError<T extends number = number> extends Error {
     }
   }
 
-  public static fromRequest(request: Request, response: Response) {
+  public static fromRequest(request: Request, response: Response, statusText: string) {
     return new HttpError({
-      message: response.statusText || ErrorCode[response.status],
+      message: statusText || ErrorCode[response.status],
       url: response.url,
       method: request.method,
       statusCode: response.status,

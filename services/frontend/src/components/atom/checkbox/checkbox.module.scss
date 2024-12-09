@@ -1,0 +1,33 @@
+.checkbox {
+  width: fit-content;
+  input[type='checkbox'] {
+    display: none;
+  }
+
+  input[type='checkbox'] + label {
+    cursor: pointer;
+    display: inline-block;
+    width: ptr(20);
+    height: ptr(20);
+    border: 1px solid $gray_20;
+    position: relative;
+    border-radius: ptr(4);
+  }
+
+  input[type='checkbox']:checked + label::after {
+    content: '✓';
+    font-size: ptr(16);
+    width: ptr(20);
+    height: ptr(20);
+    text-align: center;
+    color: $white;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  input[type='checkbox']:checked + label {
+    background-color: $primary;
+    border: 1px solid $primary;
+  }
+}

@@ -27,6 +27,10 @@ class Layout extends View<LayoutData> {
       </div>
     `;
   }
+
+  getSubViews<T extends Parameters<typeof this.subViews>[0]>(view: T) {
+    return this.subViews(view);
+  }
 }
 
 export { Layout };

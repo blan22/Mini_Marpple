@@ -1,0 +1,51 @@
+.product_list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem 1rem;
+  padding-bottom: 2rem;
+}
+
+.admin_product_list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2rem 1rem;
+  padding-bottom: 2rem;
+}
+
+.admin_product_list_create {
+  a {
+    width: 100%;
+    height: ptr(257.59);
+    @include flex(center, center, column);
+    border: 1px dotted $gray_20;
+    border-radius: ptr(15);
+    gap: 0.65rem;
+  }
+
+  div {
+    width: ptr(32);
+    height: ptr(32);
+    background-color: $primary;
+    border-radius: 50%;
+    @include flex(center, center);
+  }
+}
+
+.cart_list {
+  width: 650px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem 1rem;
+  margin-bottom: 2rem;
+  border-top: 1px solid $gray_20;
+  border-bottom: 1px solid $gray_20;
+  padding: 1rem 0;
+}
+
+.order_list {
+  width: 100%;
+  @include flex(center, center, column);
+  gap: 1.25rem;
+}

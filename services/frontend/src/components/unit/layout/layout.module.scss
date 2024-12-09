@@ -24,6 +24,7 @@ html {
 }
 
 .layout {
+  height: 100%;
   margin: 0 auto;
 
   @include mobile {
@@ -32,5 +33,20 @@ html {
 
   @include pc {
     width: 1000px;
+  }
+
+  @include flex(start, start, column);
+
+  header {
+    width: 100%;
+  }
+
+  main {
+    flex: 1;
+    width: 100%;
+  }
+
+  footer {
+    width: 100%;
   }
 }

@@ -1,0 +1,11 @@
+.container {
+  height: 100%;
+  @include flex(center, center, column);
+  gap: ptr(10);
+
+  a {
+    text-decoration: underline;
+    color: $gray_50;
+    margin-top: ptr(5);
+  }
+}

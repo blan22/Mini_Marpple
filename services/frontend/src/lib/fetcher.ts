@@ -7,7 +7,7 @@ export interface FetcherRequestInit extends RequestInit {
   };
 }
 
-async function http<T extends any>(path: string, config: FetcherRequestInit): Promise<T> {
+export async function http<T extends any>(path: string, config: FetcherRequestInit): Promise<T> {
   const { params, query, ...rest } = config;
 
   if (params) path += `/${params}`;
@@ -18,10 +18,7 @@ async function http<T extends any>(path: string, config: FetcherRequestInit): Pr
 
   if (!response.ok) {
     const errorJson = await response.json();
-    const error = HttpError.fromRequest(request, {
-      ...response,
-      statusText: errorJson.message || response.statusText,
-    });
+    const error = HttpError.fromRequest(request, response, errorJson.message || response.statusText);
     throw error;
   }
 
@@ -29,7 +26,14 @@ async function http<T extends any>(path: string, config: FetcherRequestInit): Pr
 }
 
 export async function get<T extends unknown = any>(path: string, config?: FetcherRequestInit): Promise<T> {
-  const init = { method: 'GET', ...config };
+  const init = {
+    method: 'GET',
+    headers: {
+      'Content-Type': `application/json`,
+      'ngrok-skip-browser-warning': '69420',
+    },
+    ...config,
+  };
   return await http<T>(path, init);
 }
 

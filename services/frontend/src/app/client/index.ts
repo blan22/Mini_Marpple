@@ -1,4 +1,4 @@
-import '../../shared/styles/reset.scss';
+import './root';
 import { hydrate } from '@rune-ts/server';
 
 import { ClientRouter } from '../router';

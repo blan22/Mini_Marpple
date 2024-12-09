@@ -1,80 +1,75 @@
-DROP TABLE IF EXISTS order_items CASCADE;
-DROP TABLE IF EXISTS orders CASCADE;
-DROP TABLE IF EXISTS carts CASCADE;
-DROP TABLE IF EXISTS products CASCADE;
-DROP TABLE IF EXISTS categories CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
+Table "users" {
+  "id" SERIAL [pk, increment]
+  "username" VARCHAR(255) [unique, not null]
+  "email" VARCHAR(255) [unique, not null]
+  "password" VARCHAR(255) [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- 사용자 테이블
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+Table "categories" {
+  "id" SERIAL [pk, increment]
+  "name" VARCHAR(50) [unique, not null]
+}
 
--- 카테고리 테이블
-CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
-);
+Table "products" {
+  "id" SERIAL [pk, increment]
+  "name" VARCHAR(255) [not null]
+  "category_id" INT [not null]
+  "price" NUMERIC(10,2) [not null]
+  "stock" INT [not null]
+  "thumbnail" VARCHAR(255)
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- 상품 관리 테이블
-CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    category_id INT,
-    price DECIMAL(10, 2) NOT NULL,
-    stock INT NOT NULL,
-    thumbnail_url VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_category
-        FOREIGN KEY (category_id) REFERENCES categories(id)
-        ON DELETE SET NULL
-);
+Table "carts" {
+  "id" SERIAL [pk, increment]
+  "user_id" INT [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- 장바구니 테이블
-CREATE TABLE carts (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_cart_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_cart_product
-        FOREIGN KEY (product_id) REFERENCES products(id)
-        ON DELETE CASCADE
-);
+Table "cart_product" {
+  "id" SERIAL [pk, increment]
+  "cart_id" INT [not null]
+  "product_id" INT [not null]
+  "quantity" INT [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- 주문 테이블
-CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-    total_price DECIMAL(10, 2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_order_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        ON DELETE CASCADE
-);
+Table "orders" {
+  "id" SERIAL [pk, increment]
+  "name" VARCHAR(255) [not null]
+  "user_id" INT [not null]
+  "total_price" NUMERIC(10,2) [not null]
+  "status" VARCHAR(50) [default: 'PENDING']
+  "payment_id" VARCHAR(255) [not null]
+  "payment_method" VARCHAR(255)
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
 
--- 주문 상세 테이블
-CREATE TABLE order_items (
-    id SERIAL PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    CONSTRAINT fk_order_item_order
-        FOREIGN KEY (order_id) REFERENCES orders(id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_order_item_product
-        FOREIGN KEY (product_id) REFERENCES products(id)
-        ON DELETE CASCADE
-);
+Table "order_product" {
+  "id" SERIAL [pk, increment]
+  "order_id" INT [not null]
+  "product_id" INT [not null]
+  "quantity" INT [not null]
+  "created_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+  "updated_at" TIMESTAMPTZ [default: `CURRENT_TIMESTAMP`]
+}
+
+Ref:"categories"."id" < "products"."category_id" [delete: set null]
+
+Ref:"users"."id" < "carts"."user_id" [delete: cascade]
+
+Ref:"carts"."id" < "cart_product"."cart_id" [delete: cascade]
+
+Ref:"products"."id" < "cart_product"."product_id" [delete: cascade]
+
+Ref:"users"."id" < "orders"."user_id" [delete: cascade]
+
+Ref:"orders"."id" < "order_product"."order_id" [delete: cascade]
+
+Ref:"products"."id" < "order_product"."product_id"

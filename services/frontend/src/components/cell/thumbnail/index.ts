@@ -3,19 +3,21 @@ import klass from './thumbnail.module.scss';
 import { Typography, Image } from '../../atom';
 
 interface ThumbnailData {
-  thumbnail: File | null;
+  url?: string | null;
 }
 
 class Thumbnail extends View<ThumbnailData> {
-  private _url: string | null = null;
+  constructor(data: ThumbnailData) {
+    super({ ...data });
+  }
 
   override template() {
     return html`
       <div class="${klass.thumbnail}">
-        ${this._url
+        ${this.data.url
           ? html`${new Image(
               {
-                src: this._url,
+                src: this.data.url,
               },
               {
                 width: '100%',
@@ -33,13 +35,11 @@ class Thumbnail extends View<ThumbnailData> {
   }
 
   setThumbnail(data: File | null) {
-    if (this._url) {
-      URL.revokeObjectURL(this._url);
+    if (this.data.url) {
+      URL.revokeObjectURL(this.data.url);
     }
 
-    this.data.thumbnail = data;
-
-    this._url = this.data.thumbnail ? URL.createObjectURL(this.data.thumbnail) : null;
+    this.data.url = data ? URL.createObjectURL(data) : null;
 
     this.redraw();
   }

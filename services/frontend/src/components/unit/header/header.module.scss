@@ -1,9 +1,10 @@
 .header {
+  width: 100%;
   @include flex(space-between, center);
   padding: 2rem 0;
 }
 
-.left {
+.header_left {
   @include flex(space-between, center);
   gap: 2rem;
 
@@ -17,7 +18,7 @@
   }
 }
 
-.right {
+.header_right {
   @include flex(space-between, center);
 
   ul {
@@ -30,4 +31,10 @@
   }
 }
 
-.logo {}
+.header_active {
+  color: $primary;
+  font-weight: 700;
+}
+
+.logo {
+}
